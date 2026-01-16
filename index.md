@@ -149,14 +149,14 @@ Comme dans le laboratoire 1, les scripts sont configurés de manière à activer
 
 Afin de vous permettre de déboguer plus facilement vos programmes, nous vous fournissons les **exécutables binaires (compilés) pour chaque programme** (client et serveur). Ces exécutables constituent la solution du laboratoire et sont présents dans le dossier *executables* du dépôt Git. Vous pouvez donc, par exemple, tester votre programme client en utilisant la solution du programme serveur, et vice-versa. Évidemment, ces binaires ne peuvent être remis pour l'évaluation : vous devez implémenter vos propres programmes!
 
-Pour les utiliser, vous pouvez les transférer sur votre Raspberry Pi, puis les lancer indépendamment, dans un terminal, juste avant (ou après) avoir lancé votre propre programme. `./setrh2025-tp2-serveurCurl` suffit pour le serveur, le client doit quant à lui être lancé avec le chemin vers le point de montage, par exemple `./setrh2025-tp2-daemonFuse -f -s /home/pi/projects/laboratoire2/pointdemontage`. Retirez le `-s` si vous voulez utiliser le mode multi-threads, par contre dans ce cas le programme ne vous affichera pas d'information de débogage dans le terminal.
+Pour les utiliser, vous pouvez les transférer sur votre Raspberry Pi, puis les lancer indépendamment, dans un terminal, juste avant (ou après) avoir lancé votre propre programme. `./setrh2026-tp2-serveurCurl` suffit pour le serveur, le client doit quant à lui être lancé avec le chemin vers le point de montage, par exemple `./setrh2026-tp2-daemonFuse -f -s /home/pi/projects/laboratoire2/pointdemontage`. Retirez le `-s` si vous voulez utiliser le mode multi-threads, par contre dans ce cas le programme ne vous affichera pas d'information de débogage dans le terminal.
 
 > **Attention** : bien que les programmes fournis soient *corrects* (au sens où ils respectent l'énoncé du laboratoire), ils ne sont pas infaillibles et blindés contre toute requête incorrecte. Envoyer des données erronées à ces programmes _peut_ conduire à un plantage ou un blocage du programme. Par exemple, dans le cadre de ce laboratoire, si votre serveur envoie un message incorrectement formaté (ex. la taille indiqué dans l'en-tête de votre réponse ne correspond pas réellement à la taille du fichier qui suit), le programme client que nous vous fournissons a de bonnes chances de s'arrêter brutalement ou de bloquer. De même, si une requête ne contient aucun status valide, le comportement du serveur sera imprévisible.
 
 
 ## 9. Modalités d'évaluation
 
-Ce travail doit être réalisé **en équipe de deux**, la charge de travail étant à répartir équitablement entre les deux membres de l'équipe. Aucun rapport n'est à remettre, mais vous devez soumettre votre code source dans monPortail avant le **13 février 2025, 17h00**. Ensuite, lors de la séance de laboratoire du **14 février 2025**, les **deux** équipiers doivent être en mesure individuellement d'expliquer leur approche et de démontrer le bon fonctionnement de l'ensemble de la solution à l'équipe du laboratoire. Si vous ne pouvez pas vous y présenter, contactez l'équipe pédagogique du cours dans les plus brefs délais afin de convenir d'une date d'évaluation alternative. Ce travail compte pour **12%** de la note totale du cours.
+Ce travail doit être réalisé **en équipe de deux**, la charge de travail étant à répartir équitablement entre les deux membres de l'équipe. Aucun rapport n'est à remettre, mais vous devez soumettre votre code source dans monPortail avant le **11 février 2026, 17h00**. Ensuite, lors de la séance de laboratoire du **13 février 2026**, les **deux** équipiers doivent être présent pour l'évaluation individuelle de 30 minutes. Si vous ne pouvez pas vous y présenter, contactez l'équipe pédagogique du cours dans les plus brefs délais afin de convenir d'une date d'évaluation alternative. Ce travail compte pour **12%** de la note totale du cours.
 
 L'évaluation en personne se fait sur le matériel (Raspberry Pi Zero W) de l'équipe pédagogique (enseignant ou assistant de cours), configuré avec l'image du laboratoire 1. Cette évaluation comprendra les éléments suivants :
 
@@ -180,30 +180,32 @@ L'évaluation en personne se fait sur le matériel (Raspberry Pi Zero W) de l'é
 
 ### 9.1. Barème d'évaluation
 
-Le barême d'évaluation détaillé sera le suivant (laboratoire noté sur 20 points) :
+Pour l'obtention de la note d'équipe, le barême d'évaluation détaillé sera le suivant (laboratoire noté sur 20 points) :
 
-#### 9.1.1. Qualité du code remis (6 points)
+#### 9.1.1. Qualité du code remis (7 points)
 
-* (4 pts) Le code C est valide, complet et ne contient pas d'erreurs empêchant le bon déroulement des programmes.
+* (5 pts) Le code C est valide, complet et ne contient pas d'erreurs empêchant le bon déroulement des programmes.
 * (1 pts) La compilation des deux exécutables ne génère aucun avertissement (*warning*) de la part du compilateur.
 * (1 pts) Les erreurs éventuelles (fichier non existant, module serveur non démarré) sont correctement signalées.
 
-#### 9.1.2. Validité de la solution (9 points)
+#### 9.1.2. Validité de la solution (13 points)
 
 > **Attention** : un programme ne compilant pas obtient automatiquement une note de **zéro** pour cette section.
 
-* (1 pts) Le programme est en mesure de télécharger un fichier sur un serveur distant via la librairie cURL.
+* (2 pts) Le programme est en mesure de télécharger un fichier sur un serveur distant via la librairie cURL.
 * (3 pts) La communication entre le module serveur (le programme téléchargeant les fichiers) et client (le système de fichiers FUSE) via un socket Unix est fonctionnelle dans les deux sens.
-* (1 pts) Le système de fichiers setrFS est fonctionnel pour lister les fichiers du répertoires.
-* (2 pts) Le système de fichiers setrFS est fonctionnel en lecture (il est possible d'ouvrir tous les fichiers présents dans le répertoire de test).
+* (2 pts) Le système de fichiers setrFS est fonctionnel pour lister les fichiers du répertoires.
+* (3 pts) Le système de fichiers setrFS est fonctionnel en lecture (il est possible d'ouvrir tous les fichiers présents dans le répertoire de test).
 * (2 pts) Le système complet est en mesure de gérer plusieurs fichiers en même temps, tant du côté du module serveur (téléchargement parallèle de plusieurs fichiers) que du côté du module client (plusieurs appels au système de fichiers simultanés).
 * (1 pts) L'envoi d'un signal SIGUSR2 au module serveur écrit correctement les statistiques courantes sur la console.
 
-#### 9.1.3. Justesse des explications et réponses aux questions (5 points)
+#### 9.1.3. Évaluation individuelle
 
-* (5 pts) Les étudiants sont en mesure d'expliquer l'approche utilisée et de répondre aux questions concernant leur code et la théorie liée au laboratoire.
+La note obtenue à l'évaluation écrite individuelle du 13 février 2026 deviendra un facteur multiplicatif appliqué individuellement sur la note d'équipe. Par exemple, une note de 75% à l'évaluation individuelle combinée à une note de 90% pour le code remis résultera en une note de 0.75*0.90 = 67.5%. Une absence non-motivée à cette évaluation entraîne une note (et donc un facteur multiplicatif) de 0.
 
+#### 9.1.4. Questionnaire sur l'utilisation de l'IA
 
+Votre remise _doit_ inclure le fichier `UTILISATION_IA.txt` dûment complété. Les réponses ne sont pas évaluées en tant que telles, mais ne pas remettre ce fichier entraîne une pénalité automatique de 10% sur la note d'équipe.
 
 ## 10. Ressources et lectures connexes
 
