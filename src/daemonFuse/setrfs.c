@@ -184,7 +184,7 @@ static int setrfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 		}
 		nomFichier = strtok(NULL, "\n");
 	}
-	free(nomFichier);
+	free(indexStr);
 
 	return 0;
 }
