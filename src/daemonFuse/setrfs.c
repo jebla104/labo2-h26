@@ -497,5 +497,22 @@ static struct fuse_operations setrfs_oper = {
 int main(int argc, char *argv[])
 {
 	umask(0);
-	return fuse_main(argc, argv, &setrfs_oper, NULL);
+	
+	// Ajoute systematiquement l'option direct_io pour assurer qu'aucun cache
+	// ne soit utilise par FUSE (fait en sorte que read() est toujours appele)
+	int new_argc = argc + 2;
+	char **new_argv = malloc(sizeof(char*) * (new_argc + 1));
+	
+	// Copy original arguments
+	for (int i = 0; i < argc; i++) {
+		new_argv[i] = argv[i];
+	}
+	// Add our options
+	new_argv[argc] = "-o";
+	new_argv[argc + 1] = "direct_io,attr_timeout=0,entry_timeout=0";
+	new_argv[argc + 2] = NULL;
+	
+	int ret = fuse_main(new_argc, new_argv, &setrfs_oper, NULL);
+	free(new_argv);
+	return ret;
 }
