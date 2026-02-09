@@ -48,6 +48,18 @@ void gererSignal(int signo) {
     // lorsque SIGUSR2 (et _seulement_ SIGUSR2) est reçu
     // TODO
 
+    int counter = 0;
+    if (signo == SIGUSR2) {
+        printf("\n=== CONNEXION STATS ===\n");
+        for (int i = 0; i < MAX_CONNEXIONS; i++) {
+            if (reqList[i].status != REQ_STATUS_INACTIVE) {
+                printf("Connexion %d: %s\n", i, statusDesc[reqList[i].status]);
+                counter++;
+            }
+        }
+
+        printf("\nTotal: %d/%d connexions actives\n", counter, MAX_CONNEXIONS);
+    }
 }
 
 
@@ -65,6 +77,7 @@ int main(int argc, char* argv[]){
 
     // TODO
     // Implémentez ici le code permettant d'attacher la fonction "gereSignal" au signal SIGUSR2
+    signal(SIGUSR2, gererSignal);
 
 
     // TODO
@@ -73,26 +86,62 @@ int main(int argc, char* argv[]){
     //      Puis, désignez le socket comme étant de type AF_UNIX
     //      Finalement, copiez le chemin vers le socket UNIX dans le bon attribut de la structure
     //      Voyez man unix(7) pour plus de détails sur cette structure
+    
+    struct sockaddr_un addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sun_family = AF_UNIX;
+    strcpy(addr.sun_path, path);
 
     // TODO
     // 2) Créez le socket en utilisant la fonction socket() et affectez-le à une variable nommée sock
     //      Vérifiez si sa création a été effectuée avec succès, sinon quittez le processus en affichant l'erreur
+
+    int sock = socket(AF_UNIX, SOCK_STREAM, 0);
+    if (sock < 0) {
+        perror("socket creation failed\n");
+        exit(1);
+    }
+
+    printf("socket created\n");
 
     // TODO
     // 3) Utilisez fcntl() pour mettre le socket en mode non-bloquant
     //      Vérifiez si l'opération a été effectuée avec succès, sinon quittez le processus en affichant l'erreur
     //      Voyez man fcntl pour plus de détails sur le champ à modifier
 
+    int flags = fcntl(sock, F_GETFL, 0);
+    if (flags < 0 || fcntl(sock, F_SETFL, flags | O_NONBLOCK) < 0) {
+        perror("setting nonblocking mode failed\n");
+        exit(1);
+    }
+
+    printf("socket set to non-blocking mode\n");
+
     // TODO
     // 4) Faites un bind sur le socket
     //      Vérifiez si l'opération a été effectuée avec succès, sinon quittez le processus en affichant l'erreur
     //      Voyez man bind(2) pour plus de détails sur cette opération
+
+    int binding = bind(sock, (struct sockaddr*)&addr, sizeof(addr));
+    if (binding < 0) {
+        perror("socket binding failed\n");
+        exit(1);
+    }
+
+    printf("binding done\n");
 
     // TODO
     // 5) Mettez le socket en mode écoute (listen), en acceptant un maximum de MAX_CONNEXIONS en attente
     //      Vérifiez si l'opération a été effectuée avec succès, sinon quittez le processus en affichant l'erreur
     //      Voyez man listen pour plus de détails sur cette opération
 
+    int listening = listen(sock, MAX_CONNEXIONS);
+    if (listening < 0) {
+        perror("socket listening failed\n");
+        exit(1);
+    }
+
+    printf("socket is now listening\n");
 
     // Initialisation du socket UNIX terminée!
 

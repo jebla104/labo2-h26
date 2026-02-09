@@ -21,7 +21,6 @@ build/
 *.gdb
 
 # IDE
-.vscode/
 .idea/
 *.swp
 *.swo
