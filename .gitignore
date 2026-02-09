@@ -1,0 +1,34 @@
+# Build artifacts
+*.o
+*.a
+*.so
+*.out
+
+# Executables
+serveurCurl
+daemonFuse
+setrh2026-tp2-*
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+build/
+
+# Debug
+*.dSYM/
+*.gdb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Unix socket
+/tmp/setrunixsocket
+
+# OS
+.DS_Store
