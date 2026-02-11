@@ -4,11 +4,6 @@
 *.so
 *.out
 
-# Executables
-serveurCurl
-daemonFuse
-setrh2026-tp2-*
-
 # CMake
 CMakeCache.txt
 CMakeFiles/
