@@ -1,15 +1,85 @@
 Question 1 : Avez-vous utilisé un ou des outils d'IA pour ce laboratoire, même seulement en partie (oui/non)?
 
-
+Oui
 
 Répondez aux questions suivantes seulement si vous avez répondu "oui" à la question précédente.
 
 Question 2 : Quels modèles (ex., Claude Opus, Gemini Pro, GPT-Codex, etc.)?
 
+GPT-5
 
 Question 3 : Pour la réalisation de quelles tâches en particulier? Donnez un exemple de "prompt" utilisé et de résultat.
 
+Surtout pour aider la comprehension du mandat et de certaines fonctionnalites du C.
+
+Prompt :
+En C, a quoi sert la commande fcntl? Donne moi un exemple de son utilisation.
+
+Resultat :
+En C (sous Unix/Linux), fcntl (file control) sert à manipuler les propriétés d’un descripteur de fichier.
+
+Elle permet notamment de :
+
+🔁 Dupliquer un descripteur (F_DUPFD)
+
+⚙️ Modifier les flags d’un fichier (F_GETFL, F_SETFL)
+
+🔒 Gérer des verrous sur fichiers (F_SETLK, F_SETLKW)
+
+📌 Définir le flag close-on-exec (FD_CLOEXEC)
+
+🧵 Configurer certains comportements sur sockets/pipes
+
+📌 Prototype
+#include <fcntl.h>
+
+int fcntl(int fd, int cmd, ...);
+
+
+fd : descripteur de fichier
+
+cmd : commande (ex: F_GETFL)
+
+... : argument optionnel selon la commande
+
+🔧 Exemple classique : passer un fichier en mode non-bloquant
+
+C’est l’utilisation la plus fréquente (sockets, pipes, etc.).
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+int main() {
+    int flags;
+
+    // Récupérer les flags actuels de STDIN
+    flags = fcntl(STDIN_FILENO, F_GETFL);
+    if (flags == -1) {
+        perror("fcntl F_GETFL");
+        exit(EXIT_FAILURE);
+    }
+
+    // Ajouter le flag O_NONBLOCK
+    if (fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK) == -1) {
+        perror("fcntl F_SETFL");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("STDIN est maintenant non-bloquant\n");
+
+    return 0;
+}
+
+🧠 Ce que ça fait
+
+F_GETFL → récupère les flags actuels
+
+F_SETFL → remet les flags + O_NONBLOCK
+
+Résultat : les appels à read() ne bloqueront plus
 
 Question 4 : Avez-vous rencontré des problèmes lors de l'utilisation de l'IA (mauvaise compréhension des commandes fournies, résultats erronés, etc.)? Qu'avez-vous fait pour les régler?
 
-
+Non
