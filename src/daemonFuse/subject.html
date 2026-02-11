@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<!-- saved from url=(0040)https://setr-ulaval.github.io/labo2-h26/ -->
+<html lang="en" class=" js ">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+    <!-- begin _includes/seo.html -->
+    <title>Laboratoire 2 : Programmation système et réseau avec POSIX - Laboratoire 2 | Systèmes embarqués temps réel -
+        GIF-3004</title>
+    <meta name="description" content="Laboratoire 2 SETR, H2026">
+
+
+
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="Laboratoire 2 | Systèmes embarqués temps réel - GIF-3004">
+    <meta property="og:title" content="Laboratoire 2 : Programmation système et réseau avec POSIX">
+    <meta property="og:url" content="https://setr-ulaval.github.io/labo2-h26/">
+
+
+    <meta property="og:description" content="Laboratoire 2 SETR, H2026">
+
+
+
+
+
+
+
+
+
+
+
+
+    <link rel="canonical" href="https://setr-ulaval.github.io/labo2-h26/">
+
+
+
+
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+    "name": "Université Laval",
+    "url": "https://setr-ulaval.github.io/labo2-h26/"
+}
+</script>
+
+
+
+
+
+
+
+
+
+    <!-- end _includes/seo.html -->
+
+
+
+    <link href="https://setr-ulaval.github.io/labo2-h26/feed.xml" type="application/atom+xml" rel="alternate"
+        title="Laboratoire 2 | Systèmes embarqués temps réel - GIF-3004 Feed">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script>
+        document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+
+    </script>
+
+    <!-- For all browsers -->
+    <link rel="stylesheet"
+        href="./Laboratoire 2 _ Programmation système et réseau avec POSIX - Laboratoire 2 _ Systèmes embarqués temps réel - GIF-3004_files/main.css">
+    <link rel="stylesheet"
+        href="./Laboratoire 2 _ Programmation système et réseau avec POSIX - Laboratoire 2 _ Systèmes embarqués temps réel - GIF-3004_files/all.min.css"
+        as="style" onload="this.onload=null;this.rel=&#39;stylesheet&#39;">
+    <noscript>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css">
+    </noscript>
+
+
+
+    <!-- start custom head snippets -->
+
+    <!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+    <!-- end custom head snippets -->
+
+    <style id="fit-vids-style">
+        .fluid-width-video-wrapper {
+            width: 100%;
+            position: relative;
+            padding: 0;
+        }
+
+        .fluid-width-video-wrapper iframe,
+        .fluid-width-video-wrapper object,
+        .fluid-width-video-wrapper embed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <style>
+        .flipX video::-webkit-media-text-track-display {
+            transform: matrix(-1, 0, 0, 1, 0, 0) !important;
+        }
+
+        .flipXY video::-webkit-media-text-track-display {
+            transform: matrix(-1, 0, 0, -1, 0, 0) !important;
+        }
+
+        .flipXYX video::-webkit-media-text-track-display {
+            transform: matrix(1, 0, 0, -1, 0, 0) !important;
+        }
+    </style>
+    <style>
+        @keyframes blinkWarning {
+            0% {
+                color: red;
+            }
+
+            100% {
+                color: white;
+            }
+        }
+
+        @-webkit-keyframes blinkWarning {
+            0% {
+                color: red;
+            }
+
+            100% {
+                color: white;
+            }
+        }
+
+        .blinkWarning {
+            -webkit-animation: blinkWarning 1s linear infinite;
+            -moz-animation: blinkWarning 1s linear infinite;
+            animation: blinkWarning 1s linear infinite;
+        }
+    </style>
+</head>
+
+<body class="layout--single wide" dir="ltr">
+    <nav class="skip-links">
+        <ul>
+            <li><a href="https://setr-ulaval.github.io/labo2-h26/#site-nav" class="screen-reader-shortcut">Skip to
+                    primary navigation</a></li>
+            <li><a href="https://setr-ulaval.github.io/labo2-h26/#main" class="screen-reader-shortcut">Skip to
+                    content</a></li>
+            <li><a href="https://setr-ulaval.github.io/labo2-h26/#footer" class="screen-reader-shortcut">Skip to
+                    footer</a></li>
+        </ul>
+    </nav>
+
+
+
+    <div class="masthead">
+        <div class="masthead__inner-wrap">
+            <div class="masthead__menu">
+                <nav id="site-nav" class="greedy-nav">
+
+                    <a class="site-title" href="https://setr-ulaval.github.io/labo2-h26/">
+                        Laboratoire 2 | Systèmes embarqués temps réel - GIF-3004
+
+                    </a>
+                    <ul class="visible-links"></ul>
+
+                    <button class="greedy-nav__toggle hidden" type="button" count="0">
+                        <span class="visually-hidden">Toggle menu</span>
+                        <div class="navicon"></div>
+                    </button>
+                    <ul class="hidden-links hidden"></ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="initial-content">
+
+
+
+
+
+
+        <div id="main" role="main">
+
+            <div class="sidebar sticky">
+
+
+
+
+                <img src="./Laboratoire 2 _ Programmation système et réseau avec POSIX - Laboratoire 2 _ Systèmes embarqués temps réel - GIF-3004_files/UL-logo.svg"
+                    alt="Université Laval">
+
+                <h3>Systèmes embarqués temps réel - GIF-3004</h3>
+
+
+
+
+
+            </div>
+
+
+
+            <article class="page" itemscope="" itemtype="https://schema.org/CreativeWork">
+                <meta itemprop="headline" content="Laboratoire 2 : Programmation système et réseau avec POSIX">
+
+
+
+
+                <div class="page__inner-wrap">
+
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="headline">
+                            <a href="https://setr-ulaval.github.io/labo2-h26/" itemprop="url">Laboratoire 2 :
+                                Programmation système et réseau avec POSIX
+                            </a>
+                        </h1>
+
+
+
+                    </header>
+
+
+                    <section class="page__content" itemprop="text">
+
+                        <aside class="sidebar__right ">
+                            <nav class="toc">
+                                <header>
+                                    <h4 class="nav__title"><i class="fas fa-file-alt"></i> Table des matières</h4>
+                                </header>
+                                <ul class="toc__menu">
+                                    <li class="active"><a href="https://setr-ulaval.github.io/labo2-h26/#1-objectifs">1.
+                                            Objectifs</a></li>
+                                    <li><a
+                                            href="https://setr-ulaval.github.io/labo2-h26/#2-pr%C3%A9sentation-du-projet">2.
+                                            Présentation du projet</a></li>
+                                    <li><a
+                                            href="https://setr-ulaval.github.io/labo2-h26/#3-pr%C3%A9paration-et-outils-n%C3%A9cessaires">3.
+                                            Préparation et outils nécessaires</a>
+                                        <ul>
+                                            <li><a
+                                                    href="https://setr-ulaval.github.io/labo2-h26/#31-pr%C3%A9requis-logiciels-et-configuration-du-raspberry-pi">3.1.
+                                                    Prérequis logiciels et configuration du Raspberry Pi</a></li>
+                                            <li><a
+                                                    href="https://setr-ulaval.github.io/labo2-h26/#32-configuration-des-dossiers">3.2.
+                                                    Configuration des dossiers</a></li>
+                                            <li><a
+                                                    href="https://setr-ulaval.github.io/labo2-h26/#33-r%C3%A9cup%C3%A9ration-du-code-source">3.3.
+                                                    Récupération du code source</a></li>
+                                            <li><a
+                                                    href="https://setr-ulaval.github.io/labo2-h26/#34-organisation-du-code">3.4.
+                                                    Organisation du code</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a
+                                            href="https://setr-ulaval.github.io/labo2-h26/#4-premi%C3%A8re-partie--serveur-de-t%C3%A9l%C3%A9chargement">4.
+                                            Première partie : serveur de téléchargement</a></li>
+                                    <li><a
+                                            href="https://setr-ulaval.github.io/labo2-h26/#5-seconde-partie--syst%C3%A8me-de-fichier-local">5.
+                                            Seconde partie : système de fichier local</a></li>
+                                    <li><a href="https://setr-ulaval.github.io/labo2-h26/#6-ex%C3%A9cution-et-outils">6.
+                                            Exécution et outils</a>
+                                        <ul>
+                                            <li><a
+                                                    href="https://setr-ulaval.github.io/labo2-h26/#61-ex%C3%A9cutables-fournis">6.1.
+                                                    Exécutables fournis</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a
+                                            href="https://setr-ulaval.github.io/labo2-h26/#7-pr%C3%A9cisions-et-limitations-du-projet">7.
+                                            Précisions et limitations du projet</a>
+                                        <ul>
+                                            <li><a
+                                                    href="https://setr-ulaval.github.io/labo2-h26/#71-avertissements-du-compilateur">7.1.
+                                                    Avertissements du compilateur</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a
+                                            href="https://setr-ulaval.github.io/labo2-h26/#8-modalit%C3%A9s-d%C3%A9valuation">8.
+                                            Modalités d’évaluation</a>
+                                        <ul>
+                                            <li><a
+                                                    href="https://setr-ulaval.github.io/labo2-h26/#81-bar%C3%A8me-d%C3%A9valuation">8.1.
+                                                    Barème d’évaluation</a>
+                                                <ul>
+                                                    <li><a
+                                                            href="https://setr-ulaval.github.io/labo2-h26/#811-qualit%C3%A9-du-code-remis-7-points">8.1.1.
+                                                            Qualité du code remis (7 points)</a></li>
+                                                    <li><a
+                                                            href="https://setr-ulaval.github.io/labo2-h26/#812-validit%C3%A9-de-la-solution-13-points">8.1.2.
+                                                            Validité de la solution (13 points)</a></li>
+                                                    <li><a
+                                                            href="https://setr-ulaval.github.io/labo2-h26/#813-%C3%A9valuation-individuelle">8.1.3.
+                                                            Évaluation individuelle</a></li>
+                                                    <li><a
+                                                            href="https://setr-ulaval.github.io/labo2-h26/#814-questionnaire-sur-lutilisation-de-lia">8.1.4.
+                                                            Questionnaire sur l’utilisation de l’IA</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><a
+                                            href="https://setr-ulaval.github.io/labo2-h26/#9-ressources-et-lectures-connexes">9.
+                                            Ressources et lectures connexes</a></li>
+                                </ul>
+                            </nav>
+                        </aside>
+
+                        <h2 id="1-objectifs" class="active">1. Objectifs<a class="header-link"
+                                href="https://setr-ulaval.github.io/labo2-h26/#1-objectifs" title="Permalink"><span
+                                    class="sr-only">Permalink</span><i class="fas fa-link"></i></a></h2>
+
+                        <p>Ce travail pratique vise les objectifs suivants :</p>
+
+                        <ol>
+                            <li>Se familiariser avec la norme POSIX, plus particulièrement l’utilisation des
+                                <em>processus</em>, des <em>pipes Unix</em>, du multithreading, des <em>sockets</em>,
+                                des <em>signaux</em> et du système de fichiers;</li>
+                            <li>Se familiariser avec l’utilisation des pages de manuel Unix;</li>
+                            <li>Concevoir et implémenter un projet de moyenne envergure dans un langage de bas niveau
+                                (C);</li>
+                            <li>Comprendre la notions d’abstraction des fichiers sur Unix.</li>
+                        </ol>
+
+                        <h2 id="2-présentation-du-projet">2. Présentation du projet<a class="header-link"
+                                href="https://setr-ulaval.github.io/labo2-h26/#2-pr%C3%A9sentation-du-projet"
+                                title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a>
+                        </h2>
+
+                        <p>Un <strong>système de fichiers</strong> est une abstraction qui permet de “traduire” une
+                            suite d’octets stockée quelque part en une hiérarchie de dossiers/fichiers interprétable par
+                            un utilisateur. Par exemple, dans un explorateur de fichiers, lorsque vous cliquez sur un
+                            dossier pour l’ouvrir, c’est le système de fichier qui est appelé pour déterminer la liste
+                            des fichiers que ce dossier contient. Cela n’est pas différent dans un terminal : lorsque
+                            vous exécutez la comamnde <code class="language-plaintext highlighter-rouge">ls</code> dans
+                            un dossier par exemple, c’est le système de fichier qui produit la liste des éléments dans
+                            ce dossier. Si la plupart des systèmes de fichiers sont <em>locaux</em> (à savoir qu’ils
+                            utilisent une source de données locale, telle qu’un disque dur), il est tout à fait possible
+                            de profiter de la couche d’abstraction qu’ils offrent pour utiliser une autre source de
+                            données. Il existe par exemple des systèmes de fichiers <em>réseaux</em>, à savoir qu’ils
+                            affichent et retournent les fichiers qui sont en réalité stockés sur un serveur distant,
+                            “comme si” ils étaient sur l’ordinateur de l’utilisateur. Cela peut se révéler très utile
+                            car les programmes qui utilisent ces dossiers et fichiers n’ont pas besoin de savoir d’où
+                            vient l’information : <code class="language-plaintext highlighter-rouge">ls</code> n’a
+                            aucune idée de <em>comment</em> le système de fichiers lui retourne la liste des éléments
+                            d’un dossier et <code class="language-plaintext highlighter-rouge">cat</code> (qui affiche
+                            le contenu d’un fichier dans le terminal) est complètement ignorant de <em>comment</em> le
+                            système de fichiers lui retourne le contenu d’un fichier. Cela est vrai pour la grande
+                            majorité des commandes du terminal. Il leur est donc possible de fonctionner dans toutes
+                            sortes de contextes, tant que le système de fichiers fait son travail d’abstraction.</p>
+
+                        <p>Dans ce projet, vous devrez implémenter <strong>setrFS</strong>, un système de fichiers en
+                            espace utilisateur. Plus spécifiquement, ce système de fichiers doit offrir une couche
+                            d’abstraction pour un site web (HTTP) : si le site contient les fichiers “a.txt”, “b.cpp” et
+                            “c.jpg” dans la racine de son serveur HTTP, alors un <code
+                                class="language-plaintext highlighter-rouge">ls</code> à la racine de votre système de
+                            fichier doit présenter ces trois mêmes fichiers. Pareillement, ouvrir un de ces fichiers
+                            (par exemple en utilisant <code class="language-plaintext highlighter-rouge">cat</code>)
+                            doit, de manière transparente à l’utilisateur, télécharger le fichier et le livrer à
+                            l’utilisateur comme si c’était un fichier local.</p>
+
+                        <p>Le projet doit être en mesure d’effectuer ses traitements en parallèle; autrement dit, si
+                            deux processus distincts ouvrent deux fichiers (différents ou non), votre système de fichier
+                            doit pouvoir les télécharger et les livrer en même temps. L’architecture générale du projet
+                            est présentée dans la figure suivante.</p>
+
+                        <p><img src="./Laboratoire 2 _ Programmation système et réseau avec POSIX - Laboratoire 2 _ Systèmes embarqués temps réel - GIF-3004_files/schema.png"
+                                style="width:1000px"></p>
+
+                        <p>Conceptuellement, le projet consiste en deux programmes roulant en tant que <em>daemon</em>
+                            sur le Raspberry Pi. Le premier est un serveur de téléchargement : il offre une interface
+                            sur un socket Unix qui permet à n’importe quel autre processus de demander le téléchargement
+                            d’un fichier situé sur une machine distante. Comme le téléchargement d’un fichier peut
+                            potentiellement être long, ce serveur recourt à du <em>multiprocessing</em>, c’est-à-dire
+                            que chaque requête est traitée par un processus différent. Cela permet une parallélisation
+                            intrinsèque des téléchargements.</p>
+
+                        <p>Ce serveur possède une interface très simple. Afin de pouvoir réellement mettre en place un
+                            système de fichiers, il est nécessaire de fournir une implémentation plus formelle des
+                            différents appels systèmes (<em>open</em>, <em>read</em>, <em>stat</em>, etc.) utilisés pour
+                            explorer une arboresence et lire des fichiers. C’est la tâche du second programme, qui est
+                            un système de fichiers en espace utilisateur utilisant la librairie <strong>fuse</strong>.
+                        </p>
+
+                        <p>Cette manière de découper le problème entre, d’une part, un programme capable d’effectuer des
+                            requêtes HTTP pour transférer localement un fichier, mais n’offrant qu’une interface
+                            limitée, et, d’autre part, un programme offrant une interface de système de fichiers
+                            complète, mais incapable de récupérer un fichier autrement que par une interface simple,
+                            confère une grande polyvalence à ce système. Par exemple, si l’on souhaitait plutôt avoir un
+                            système de fichiers offrant une couche d’abstraction à un serveur FTP, il suffit de
+                            remplacer le <em>daemon</em> de téléchargement, l’implémentation du <em>daemon</em> offrant
+                            le système de fichiers à proprement parler restant exactement la même.</p>
+
+                        <blockquote>
+                            <p><strong>Attention</strong> : ne confondez pas le serveur de téléchargement (que vous
+                                implémentez) et le serveur HTTP (accessible sur le <a
+                                    href="http://wcours.gel.ulaval.ca/GIF3004/labo2/index.txt">site web du
+                                    département</a> par exemple). Le serveur HTTP contient des fichiers; <em>votre</em>
+                                serveur de téléchargement le contactera pour obtenir les fichiers, qu’il transmettra par
+                                la suite au <em>client</em> FUSE, qui gérera les accès bas niveau au système de fichier.
+                            </p>
+                        </blockquote>
+
+                        <h2 id="3-préparation-et-outils-nécessaires">3. Préparation et outils nécessaires<a
+                                class="header-link"
+                                href="https://setr-ulaval.github.io/labo2-h26/#3-pr%C3%A9paration-et-outils-n%C3%A9cessaires"
+                                title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a>
+                        </h2>
+
+                        <h3 id="31-prérequis-logiciels-et-configuration-du-raspberry-pi">3.1. Prérequis logiciels et
+                            configuration du Raspberry Pi<a class="header-link"
+                                href="https://setr-ulaval.github.io/labo2-h26/#31-pr%C3%A9requis-logiciels-et-configuration-du-raspberry-pi"
+                                title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a>
+                        </h3>
+
+                        <p><strong>Attention</strong> à ne pas mettre à jour le système (n’exécutez <em>pas</em> un
+                            apt-get upgrade)!</p>
+
+                        <p>Les prérequis logiciels sont déjà installés pour vous, donc normalement il n’y a aucun
+                            changement à faire.</p>
+
+                        <p>Pour information, les dépendances sont les suivantes :</p>
+
+                        <ul>
+                            <li><a href="https://curl.haxx.se/libcurl/">cURL et libcurl</a></li>
+                            <li><a href="https://github.com/libfuse/libfuse">libFUSE</a> – attention cependant à
+                                utiliser la version <strong>2</strong> et non la version 3</li>
+                            <li>fusermount</li>
+                        </ul>
+
+                        <p>Ces librairies sont déjà installées dans le disque image du cours. Elles devraient aussi
+                            avoir été synchronisées avec votre chaîne de compilation croisée lors du laboratoire 1. Vous
+                            n’avez donc normalement rien à faire. Si vous avez installé votre propre chaîne de
+                            compilation croisée, assurez vous qu’elle est à jour.</p>
+
+                        <h3 id="32-configuration-des-dossiers">3.2. Configuration des dossiers<a class="header-link"
+                                href="https://setr-ulaval.github.io/labo2-h26/#32-configuration-des-dossiers"
+                                title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a>
+                        </h3>
+
+                        <p>Les scripts fournis assument que les répertoires suivants existent et qu’ils sont accessibles
+                            en écriture : <code
+                                class="language-plaintext highlighter-rouge">/home/pi/projects/laboratoire2</code> et
+                            <code
+                                class="language-plaintext highlighter-rouge">/home/pi/projects/laboratoire2/pointdemontage</code>
+                        </p>
+
+                        <h3 id="33-récupération-du-code-source">3.3. Récupération du code source<a class="header-link"
+                                href="https://setr-ulaval.github.io/labo2-h26/#33-r%C3%A9cup%C3%A9ration-du-code-source"
+                                title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a>
+                        </h3>
+
+                        <p>Afin de clarifier certains détails d’implémentation, nous vous fournissons une ébauche de
+                            code que vous devez utiliser. Les divers fichiers vous sont fournis dans un <a
+                                href="https://github.com/setr-ulaval/labo2-h26">dépôt Git</a>. Clonez ce dépôt sur votre
+                            ordinateur de développement et, une fois cet énoncé lu, <em>prenez le temps d’explorer les
+                                divers fichiers, qui contiennent beaucoup de commentaires quant aux tâches précises à
+                                effectuer.</em> Rappel : vous ne devriez <em>pas</em> avoir à cloner le dépôt contenant
+                            les fichiers sources sur le Raspberry Pi!</p>
+
+                        <blockquote>
+                            <p><strong>Note</strong> : comme pour le laboratoire 1, vous <strong>devez</strong> modifier
+                                les fichiers <code
+                                    class="language-plaintext highlighter-rouge">.vscode/launch.json</code> et <code
+                                    class="language-plaintext highlighter-rouge">.vscode/tasks.json</code> pour y écrire
+                                l’adresse de votre Raspberry Pi, et ce <em>dans chacun des sous-dossiers</em>.</p>
+                        </blockquote>
+
+                        <h3 id="34-organisation-du-code">3.4. Organisation du code<a class="header-link"
+                                href="https://setr-ulaval.github.io/labo2-h26/#34-organisation-du-code"
+                                title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a>
+                        </h3>
+
+                        <p>Le code source est divisé en deux dossiers qui constituent deux projets VSC distincts,
+                            <em>serveurCurl</em> et <em>daemonFuse</em>. Chacun de ces projets peut être exécuté
+                            indépendamment. Comme pour le laboratoire 1, des CMakeLists.txt sont fournis, ce qui vous
+                            permet de les compiler en utilisant la commande <code
+                                class="language-plaintext highlighter-rouge">CMake Build</code>. Vous pouvez également
+                            les lancer en mode Debug. Faites attention à ne pas mélanger les fichiers des différents
+                            projets.</p>
+
+                        <blockquote>
+                            <p><strong>Note importante</strong> : les librairies cURL et fuse possèdent des dépendances
+                                qui génèrent des instructions illégales au lancement du programme. Ce phénomène est
+                                normal, mais pour éviter qu’il ne vous empêche de déboguer vos programmes, assurez-vous
+                                d’ajouter <em>systématiquement</em> un point d’arrêt (breakpoint) au début de votre
+                                fonction <code class="language-plaintext highlighter-rouge">main()</code>. Il est
+                                également possible que vous observiez des erreurs du style “Could not get threads” ou
+                                “Failed to get stack trace: Selected thread is not running”. Ces erreurs ne vous
+                                empêcheront pas d’utiliser le débogueur dans le cadre de ce TP.</p>
+                        </blockquote>
+
+                        <h2 id="4-première-partie--serveur-de-téléchargement">4. Première partie : serveur de
+                            téléchargement<a class="header-link"
+                                href="https://setr-ulaval.github.io/labo2-h26/#4-premi%C3%A8re-partie--serveur-de-t%C3%A9l%C3%A9chargement"
+                                title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a>
+                        </h2>
+
+                        <p>Pour cette première partie, vous devez implémenter un serveur de téléchargement. Ce serveur
+                            doit :</p>
+
+                        <ol>
+                            <li>Ouvrir un <em>socket Unix</em> à un emplacement de votre choix (les sockets Unix sont
+                                matérialisés par des pseudo-fichiers).</li>
+                            <li>Se mettre en écoute et attendre une connexion sur ce socket.</li>
+                            <li>Lorsqu’une connexion est acceptée, recevoir une requête dont la forme est définie dans
+                                le fichier <em>communications.h</em> qui vous est fourni. Il y a deux types de requêtes
+                                possibles, soit une requête de lecture (où votre serveur doit retourner le fichier
+                                demandé sur le socket Unix) et une requête de listage des fichiers (dans ce dernier cas,
+                                votre serveur doit retourner le contenu du fichier spécial <em>index.txt</em>).</li>
+                            <li>Pour effectuer la requête, votre serveur doit se scinder (<em>fork</em>) pour créer un
+                                <em>nouveau processus</em> qui s’occupera de la requête et permettra au parent de
+                                traiter immédiatement une nouvelle requête. Le processus parent de votre serveur doit
+                                pouvoir recevoir la réponse du processus enfant (le contenu du fichier) via un <em>pipe
+                                    Unix</em>.</li>
+                            <li>Une fois le processus enfant terminé, votre serveur doit envoyer le fichier téléchargé
+                                sur le socket Unix en attente de ce dernier.</li>
+                            <li>À tout moment, votre processus serveur doit pouvoir accepter un signal de type
+                                <em>SIGUSR2</em> (qui peut par exemple être envoyé à partir d’une console avec <code
+                                    class="language-plaintext highlighter-rouge">kill -s SIGUSR2 PID</code>, où
+                                <em>PID</em> est l’identifiant du processus serveur). Lorsque ce signal est reçu, le
+                                serveur doit immédiatement afficher dans la console des informations sur les connexions
+                                en cours, incluant au moins :
+                                <ul>
+                                    <li>Le nombre de connexions actives;</li>
+                                    <li>L’identifiant des processus enfant s’occupant de chaque téléchargement.</li>
+                                    <li>Vous pouvez optionnellement ajouter d’autres informations, telles que le nom du
+                                        fichier en cours de téléchargement ou le temps écoulé depuis le début du
+                                        téléchargement, mais ce n’est pas obligatoire.</li>
+                                </ul>
+                            </li>
+                        </ol>
+
+                        <p>Votre serveur doit pouvoir gérer au minimum cinq (5) connexions simultanées. Vous retrouverez
+                            dans le dossier <em>serveurCurl</em> du <a
+                                href="https://github.com/setr-ulaval/labo2-h26">dépôt Git du laboratoire</a>
+                            l’architecture de ce programme ainsi que l’implémentation ou l’ébauche de certaines
+                            fonctions clés. Chaque fichier contient des commentaires précis sur la tâche que vous devez
+                            remplir, prenez le temps de les lire attentivement et de vous faire une vue d’ensemble avant
+                            de vous lancer dans la programmation à proprement parler. De manière détaillée, chaque
+                            fichier remplit le rôle suivant :</p>
+
+                        <ul>
+                            <li><strong>servermain.c</strong> : contiennent la fonction <em>main()</em> du serveur de
+                                fichiers, ainsi que la fonction gérant les signaux. C’est dans la fonction <em>main</em>
+                                que se trouve la boucle de contrôle qui appelle les autres parties du serveur selon les
+                                besoins.</li>
+                            <li><strong>actions.h / actions.c</strong> : déclarent et définissent trois fonctions qui
+                                sont utilisées dans la boucle principale du serveur. La première,
+                                <em>verifierNouvelleConnexion</em>, teste si un nouveau client a tenté de se connecter
+                                et, si c’est le cas, l’ajoute à la liste des connexions en cours. La seconde,
+                                <em>traiterConnexions</em>, détermine si une requête a eu lieu sur une de ces connexions
+                                actives. La dernière, <em>traiterTelechargements</em>, vérifie si un téléchargement est
+                                complété et envoie la réponse au client s’il y a lieu.</li>
+                            <li><strong>requete.h / requete.c</strong> : contiennent des fonctions utilitaires pour la
+                                gestion des requêtes. Ces fonctions sont déjà implémentées pour vous, vous n’avez donc
+                                pas à y toucher; nous vous suggérons néanmoins de lire les commentaires de ces fichiers
+                                avec attention pour bien comprendre le fonctionnement des fonctions et structures de
+                                données qu’ils définissent.</li>
+                            <li><strong>telechargeur.h / telechargeur.c</strong> : contient le code exécuté par les
+                                processus enfants, utilisant cURL pour récupérer le contenu d’un fichier distant. Les
+                                fonctions qu’ils contiennent sont déjà implémentées pour vous; toutefois, comme pour
+                                l’item précédent, nous vous conseillons fortement de lire les fichiers afin de bien
+                                comprendre ce qu’ils font et de visualiser comment les intégrer au reste du code. En
+                                particulier, le fichier d’en-tête explique comment sont gérées les erreurs, par exemple
+                                dans le cas d’une erreur 404 lors du téléchargement du fichier demandé. La constante
+                                <em>baseUrl</em> définie au début de <em>telechargeur.c</em> contient l’adresse du
+                                serveur de fichiers, que vous n’aurez normalement pas à modifier (même s’il ne vous est
+                                pas interdit de mettre en place votre propre serveur ayant les mêmes caractéristiques
+                                que celui du cours).</li>
+                            <li><strong>communications.h / communications.c</strong> : ces fichiers sont les seuls
+                                partagés avec le second programme et définissent un protocole de communication simple
+                                entre le client et le serveur.</li>
+                        </ul>
+
+                        <blockquote>
+                            <p>Notez que le débogueur GDB n’est pas, par défaut, capable de déboguer les processus
+                                enfants lancés avec <em>fork</em>. Ainsi, vous ne pourrez pas suivre ce qui se passe
+                                dans les processus enfants exécutant cURL. Ce n’est toutefois pas un problème dans le
+                                contexte de ce laboratoire, puisque le code (correct) de téléchargement vous est déjà
+                                fourni.</p>
+                        </blockquote>
+
+                        <blockquote>
+                            <p><strong>Attention</strong> : tel que fourni, le projet ne compilera <em>pas</em>. Vous
+                                devez réaliser les sections mentionnées par le mot-clé <code
+                                    class="language-plaintext highlighter-rouge">TODO</code> (et définir les variables
+                                demandées) avant de pouvoir le compiler.</p>
+                        </blockquote>
+
+                        <h2 id="5-seconde-partie--système-de-fichier-local">5. Seconde partie : système de fichier
+                            local<a class="header-link"
+                                href="https://setr-ulaval.github.io/labo2-h26/#5-seconde-partie--syst%C3%A8me-de-fichier-local"
+                                title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a>
+                        </h2>
+
+                        <p>La structure d’un <em>daemon FUSE</em> est beaucoup plus contrainte que le serveur de
+                            téléchargement. Afin de simplifier votre tâche, nous mettons à votre disposition une ébauche
+                            de code (<em>daemonFuse/setrfs.c</em>) ainsi qu’un fichier d’outils
+                            (<em>daemonFuse/fstools.c</em>) implémentant diverses fonctions qui vous seront utiles lors
+                            du laboratoire. <strong>Lisez ces fichiers avec attention avant de commencer à programmer,
+                                ils contiennent beaucoup d’informations utiles à l’implémentation du système de
+                                fichiers.</strong></p>
+
+                        <p>De manière générale, l’écriture de ce <em>daemon</em> consiste à implémenter les différents
+                            appels système qui composent un système de fichier. Par exemple, la procédure d’ouverture et
+                            de lecture d’un fichier devrait être la suivante :</p>
+
+                        <ol>
+                            <li>Un processus (peu importe lequel, ce peut être un utilitaire en ligne de commande comme
+                                <code class="language-plaintext highlighter-rouge">cat</code> par exemple) utilise
+                                l’appel système <em>open</em> pour ouvrir le fichier. C’est à ce moment que vous
+                                demandez le téléchargement du fichier au serveur de téléchargement. L’appel à
+                                <em>open</em> sera bloquant tant que le téléchargement ne sera pas complété, ce qui est
+                                permis par le standard POSIX. Une fois le fichier téléchargé et récupéré via le socket
+                                Unix, vous devez le stocker dans la mémoire du <em>daemon</em> FUSE pour permettre son
+                                accès rapide. Une structure de cache potentielle sous forme de liste chaînée vous est
+                                fournie, mais vous pouvez opter pour un autre mécanisme.</li>
+                            <li>Le processus utilise <em>read</em> pour lire un certain nombre d’octets. Vous utilisez
+                                les données en cache pour fournir rapidement ces données au processus.</li>
+                            <li>Le processus ferme le fichier en utilisant <em>close</em> (qui correspond à la fonction
+                                <em>release</em> avec FUSE). Vous pouvez alors libérer la mémoire utilisée pour stocker
+                                ce fichier en cache.</li>
+                        </ol>
+
+                        <p>Notez que tous ces traitements s’effectuent de manière intrinsèquement parallèle. En effet,
+                            FUSE utilise un nouveau processus léger (<em>thread</em>) pour chaque appel système, ce qui
+                            signifie que plusieurs fichiers peuvent être ouverts simultanément, ou même que deux
+                            processus distincts peuvent ouvrir le même fichier (et donc partager le même cache).
+                            Assurez-vous donc de synchroniser vos accès au cache en utilisant le <em>mutex</em> déclaré
+                            dans les structures de données qui vous sont fournies et de ne supprimer une entrée du cache
+                            que lorsque <em>tous</em> les processus l’utilisant sont terminés. Pour vous aider au
+                            départ, les scripts de VSC sont configurés pour passer l’option <code
+                                class="language-plaintext highlighter-rouge">-s</code> à votre programme pour requérir
+                            un fonctionnement <em>single-threaded</em>, mais vous <strong>devez</strong> supporter le
+                            mode normal (multithread) pour l’évaluation. Pour tester ce cas, une fois votre programme
+                            débogué en mode <em>single-thread</em>, vous pouvez le lancer directement à partir d’un
+                            terminal SSH.</p>
+
+                        <h2 id="6-exécution-et-outils">6. Exécution et outils<a class="header-link"
+                                href="https://setr-ulaval.github.io/labo2-h26/#6-ex%C3%A9cution-et-outils"
+                                title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a>
+                        </h2>
+
+                        <p>Afin de vous permettre de tester votre code, un serveur HTTP a été mis en place à l’adresse
+                            <em>http://wcours.gel.ulaval.ca/GIF3004/labo2/</em>. Cette URL pointe vers un dossier
+                            contenant plusieurs fichiers de diverses tailles allant de 1 Ko à 100 Mo. La liste des
+                            fichiers est donnés dans le fichier <em><a
+                                    href="http://wcours.gel.ulaval.ca/GIF3004/labo2/index.txt">index.txt</a></em>.
+                            <em>Notez que vous n’avez pas accès à l’URL du dossier, vous devez spécifiquement demander
+                                un fichier.</em></p>
+
+                        <p>Pour tester votre code, il faut :</p>
+
+                        <ol>
+                            <li>Lancer le processus serveur (projet <em>serveurCurl</em>, créant l’exécutable <code
+                                    class="language-plaintext highlighter-rouge">setr_tp2_serveurcurl</code>) sur le
+                                Raspberry Pi Zero W</li>
+                            <li>Lancer le processeur client (projet <em>daemonFuse</em>, créant l’exécutable <code
+                                    class="language-plaintext highlighter-rouge">setr_tp2_daemonfuse</code>) sur le
+                                Raspberry Pi Zero W, avec un dossier vide servant de point de montage comme argument
+                                (normalement, <code
+                                    class="language-plaintext highlighter-rouge">/home/pi/projects/laboratoire2/pointdemontage</code>)
+                            </li>
+                            <li>Faire des opérations (par exemple <code
+                                    class="language-plaintext highlighter-rouge">ls</code> ou <code
+                                    class="language-plaintext highlighter-rouge">cat</code>) sur les fichiers de ce
+                                point de montage en vous connectant en SSH sur votre Raspberry Pi Zero W, par exemple
+                                <code
+                                    class="language-plaintext highlighter-rouge">ls /home/pi/projects/laboratoire2/pointdemontage</code>
+                                qui devrait vous afficherla liste des fichiers présents dans <a
+                                    href="http://wcours.gel.ulaval.ca/GIF3004/labo2/index.txt">index.txt</a></li>
+                        </ol>
+
+                        <p>Le lancement des processus peut être fait :</p>
+
+                        <ul>
+                            <li>En lançant le débogage pour ce projet</li>
+                            <li>En exécutant manuellement le programme en question sur une connexion SSH (<code
+                                    class="language-plaintext highlighter-rouge">/home/pi/projects/laboratoire2/setr_tp2_serveurcurl</code>
+                                ou <code
+                                    class="language-plaintext highlighter-rouge">/home/pi/projects/laboratoire2/setr_tp2_daemonfuse</code>)
+                                <em>une fois celui-ci synchronisé sur le Raspberry Pi</em>. La synchronisation est faite
+                                automatiquement à chaque lancement de débogage, vous pouvez donc simplement lancer une
+                                session de débogage et l’arrêter immédiatement si vous voulez être certain que votre
+                                exécutable est synchronisé.</li>
+                        </ul>
+
+                        <p>Le fichier <em><a
+                                    href="http://wcours.gel.ulaval.ca/GIF3004/labo2/md5sums.txt">md5sums.txt</a></em>
+                            contient quant à lui la somme MD5 de chaque fichier du répertoire (sauf lui-même), pour
+                            faciliter la validation. Par exemple, si vous voulez vérifier que votre programme est en
+                            mesure de télécharger sans erreur le fichier <em><a
+                                    href="http://wcours.gel.ulaval.ca/GIF3004/labo2/file1Mo">file1Mo</a></em>, utilisez
+                            simplement la commande <code
+                                class="language-plaintext highlighter-rouge">md5sum file1Mo</code>. Le résultat devrait
+                            être le même que celui contenu dans le fichier <em><a
+                                    href="http://wcours.gel.ulaval.ca/GIF3004/labo2/md5sums.txt">md5sums.txt</a></em>;
+                            si ce n’est pas le cas, c’est qu’il y a une erreur dans votre programme et que vous n’êtes
+                            pas en mesure de restituer le fichier dans son intégrité.</p>
+
+                        <p>N’oubliez pas que votre système de fichiers doit pouvoir gérer plusieurs requêtes
+                            simultanées. À titre d’exemple, télécharger le fichier <em><a
+                                    href="http://wcours.gel.ulaval.ca/GIF3004/labo2/file100Mo">file100Mo</a></em>
+                            devrait demander plusieurs secondes vu la taille de ce dernier; vous devriez être en mesure
+                            d’afficher un autre petit fichier (comme <em><a
+                                    href="http://wcours.gel.ulaval.ca/GIF3004/labo2/fichier.cpp">fichier.cpp</a></em> ou
+                            <em><a href="http://wcours.gel.ulaval.ca/GIF3004/labo2/logo.png"
+                                    class="hoverZoomLink">logo.png</a></em>) presque instantanément, sans devoir
+                            attendre la fin du téléchargement du gros fichier!</p>
+
+                        <h3 id="61-exécutables-fournis">6.1. Exécutables fournis<a class="header-link"
+                                href="https://setr-ulaval.github.io/labo2-h26/#61-ex%C3%A9cutables-fournis"
+                                title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a>
+                        </h3>
+
+                        <p>Afin de vous permettre de déboguer plus facilement vos programmes, nous vous fournissons les
+                            <strong>exécutables binaires (compilés) pour chaque programme</strong> (client et serveur).
+                            Ces exécutables constituent la solution du laboratoire et sont présents dans le dossier
+                            <em>executables</em> du dépôt Git. Vous pouvez donc, par exemple, tester votre programme
+                            client en utilisant la solution du programme serveur, et vice-versa. Évidemment, ces
+                            binaires ne peuvent être remis pour l’évaluation : vous devez implémenter vos propres
+                            programmes!</p>
+
+                        <p>Pour les utiliser, vous pouvez les transférer sur votre Raspberry Pi, puis les lancer
+                            indépendamment, dans un terminal, juste avant (ou après) avoir lancé votre propre programme.
+                            <code
+                                class="language-plaintext highlighter-rouge">./setrh2026-tp2-serveurCurl-solution</code>
+                            suffit pour le serveur, le client doit quant à lui être lancé avec le chemin vers le point
+                            de montage, par exemple <code
+                                class="language-plaintext highlighter-rouge">./setrh2026-tp2-daemonFuse-solution -f -s /home/pi/projects/laboratoire2/pointdemontage</code>.
+                            Retirez le <code class="language-plaintext highlighter-rouge">-s</code> si vous voulez
+                            utiliser le mode multi-threads, par contre dans ce cas le programme ne vous affichera pas
+                            d’information de débogage dans le terminal.</p>
+
+                        <blockquote>
+                            <p><strong>Attention</strong> : bien que les programmes fournis soient <em>corrects</em> (au
+                                sens où ils respectent l’énoncé du laboratoire), ils ne sont pas infaillibles et
+                                résistants à toute requête incorrecte. Envoyer des données erronées à ces programmes
+                                <em>peut</em> conduire à un plantage ou un blocage. Par exemple, si votre serveur envoie
+                                un message incorrectement formaté (ex. la taille indiqué dans l’en-tête de votre réponse
+                                ne correspond pas réellement à la taille du fichier qui suit), le programme client que
+                                nous vous fournissons a de bonnes chances de s’arrêter brutalement ou de bloquer. De
+                                même, si une requête ne contient aucun status valide, le comportement du serveur sera
+                                imprévisible.</p>
+                        </blockquote>
+
+                        <h2 id="7-précisions-et-limitations-du-projet">7. Précisions et limitations du projet<a
+                                class="header-link"
+                                href="https://setr-ulaval.github.io/labo2-h26/#7-pr%C3%A9cisions-et-limitations-du-projet"
+                                title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a>
+                        </h2>
+
+                        <p>Afin de simplifier la tâche à effectuer, vous pouvez assumer que :</p>
+
+                        <ul>
+                            <li>Le système de fichiers n’est accessible qu’en lecture. Aucune opération d’écriture n’a à
+                                être implémentée.</li>
+                            <li>La mémoire RAM est de taille suffisante pour contenir <em>2s octets</em> où <em>s</em>
+                                est la taille totale des fichiers. En d’autres termes, vous pouvez supposer que la
+                                taille totale des fichiers chargés ne dépassera jamais la moitié de la mémoire.</li>
+                            <li>Le système de fichiers ne permet qu’un seul dossier, la racine. Il n’y a aucun autre
+                                dossier sur le serveur.</li>
+                            <li>Le système de fichiers ne gère pas les permissions. Toute valeur de permission
+                                permettant de lire ses fichiers est adéquate.</li>
+                            <li>La norme POSIX permet à l’appel système <em>open</em> de bloquer, <strong>sauf</strong>
+                                si le drapeau <em>O_NONBLOCK</em> est passé. Dans votre cas, vous pouvez ignorer ce
+                                drapeau malgré tout (c’est d’ailleurs le comportement par défaut de FUSE).</li>
+                            <li>L’URL de base du serveur distant peut être directement insérée dans le code source en
+                                tant que constante, de même que le chemin vers le fichier représentant le socket Unix
+                                utilisé. C’est ce qui est déjà fait dans les fichiers <code
+                                    class="language-plaintext highlighter-rouge">telechargeur.c</code> et <code
+                                    class="language-plaintext highlighter-rouge">servermain.c</code>.</li>
+                            <li>Tel que mentionné plus haut, vous pouvez assumer la présence d’un fichier
+                                <em>index.txt</em> dans le répertoire du serveur HTTP, qui contient la liste de tous les
+                                fichiers du répertoire, chaque fichier étant séparé par un retour à la ligne.</li>
+                        </ul>
+
+                        <p>Le projet doit être implémenté <strong>en C ou C++</strong>. Le C étant le langage historique
+                            de Unix et utilisé dans la norme POSIX, son utilisation est recommandée, mais vous pouvez
+                            utiliser des éléments C++, qui peuvent se révéler utiles dans certains occasions, notamment
+                            pour les structures de données avancées. Aucune fonction ou structure de données fournie
+                            n’utilise de fonctionnalités du C++.</p>
+
+                        <p>Pour tester votre système de fichiers, nous vous conseillons d’utiliser d’abord les outils en
+                            ligne de commande (ls, cp, cat, md5sum, etc.) plutôt qu’un explorateur de fichier graphique,
+                            la raison étant qu’un tel explorateur fait énormément d’appels au système de fichiers, ce
+                            qui rend le débogage plus délicat au départ. Toutefois, une fois le programme stabilisé, une
+                            telle application pourrait constituer un très bon test de robustesse! Ceci exige cependant
+                            l’installation d’un environnement graphique, ce qui n’est pas le cas avec l’image du cours
+                            pour le Raspberry Pi.</p>
+
+                        <p>Un excellent outil pour déboguer votre système de fichier est le programme <em>strace</em>.
+                            Ce programme permet de tracer tous les appels système effectués par un processus, y compris,
+                            donc, ceux reliés à l’ouverture d’un fichier ou d’un dossier. S’il y a une erreur dans une
+                            de vos fonctions, il vous sera ainsi beaucoup plus simple de déterminer laquelle (plutôt que
+                            de simplement voir un processus bloqué).</p>
+
+                        <p>Par défaut, le système de fichiers FUSE se lance à l’arrière-plan, c’est-à-dire qu’il se
+                            déconnecte du terminal courant. Si c’est, de manière générale, un comportement souhaitable,
+                            il est moins utile dans un contexte de débogage. Pour éviter cela, les scripts de VSC sont
+                            configurés de manière à le lancer avec l’option <code
+                                class="language-plaintext highlighter-rouge">-f</code>, ce qui le force à rester à
+                            l’avant plan. De même, FUSE requiert un <em>point de montage</em> (<em>mountpoint</em>)
+                            comme premier argument. Par défaut, celui-ci est un dossier nommé <em>pointdemontage</em>
+                            dans le même répertoire que l’exécutable. Ce point de montage peut cependant être n’importe
+                            quel dossier vide sur lequel vous avez les droits d’écriture. Si votre programme plante et
+                            que vous êtes incapable de le relancer, assurez-vous que ce point de montage est bien
+                            <em>démonté</em> en utilisant la commande <code
+                                class="language-plaintext highlighter-rouge">fusermount -u mon_point_de_montage</code>
+                            sur votre Raspberry Pi.</p>
+
+                        <blockquote>
+                            <p>Lorsque vous quittez une session de débogage de manière inopinée, il se peut que GDB ne
+                                termine pas tous les processus en cours, ce qui peut poser problème pour lancer à
+                                nouveau un débogage par la suite. Si vous obtenez des erreurs de style “timeout” ou
+                                “address already in use” alors que le lancement du débogage a déjà fonctionné quelques
+                                minutes auparavant, vous pouvez vous assurer qu’aucun processus de débogage n’est actif
+                                en vous connectant en SSH sur votre Raspberry Pi et en exécutant la commande <code
+                                    class="language-plaintext highlighter-rouge">killall gdbserver</code>.</p>
+                        </blockquote>
+
+                        <p>N’oubliez pas que le projet est constitué de <em>deux exécutables distincts</em>. Par
+                            conséquent, ceux-ci doivent être lancés ensemble pour que le système soit complètement
+                            fonctionnel. Vous pouvez pour cela utiliser deux ordinateurs, mais aussi ouvrir deux
+                            fenêtres de VSC : les deux exécutables étant dans des dossiers distincts, ils sont
+                            considérés comme des projets différents par VSC. Si vous avez terminé et débogué un des
+                            exécutables, vous pouvez également l’exécuter à distance via SSH et le laisser fonctionner
+                            en arrière-plan sur le Raspberry Pi.</p>
+
+                        <h3 id="71-avertissements-du-compilateur">7.1. Avertissements du compilateur<a
+                                class="header-link"
+                                href="https://setr-ulaval.github.io/labo2-h26/#71-avertissements-du-compilateur"
+                                title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a>
+                        </h3>
+
+                        <p>Comme dans le laboratoire 1, les scripts sont configurés de manière à activer le report des
+                            avertissements par le compilateur. De plus, le code fourni est exempt d’erreurs et
+                            d’avertissements (bien qu’incomplet). Vous devez vous assurer que <strong>votre code compile
+                                sans erreur ET sans avertissement</strong>.</p>
+
+                        <blockquote>
+                            <p><strong>Attention</strong> : les avertissements ne sont affichés par GCC que lorsque vous
+                                compilez effectivement un fichier. Si vous ne le modifiez pas et relancez la
+                                compilation, ces avertissements « disparaîtront » puisque GCC ne tentera même pas de
+                                recompiler les fichiers fautifs. Assurez-vous donc de toujours nettoyer (<code
+                                    class="language-plaintext highlighter-rouge">CMake Clean</code>) votre environnement
+                                de compilation avant de compiler pour retirer les avertissements.</p>
+                        </blockquote>
+
+                        <blockquote>
+                            <p>Note importante : il est possible que certains outils d’analyse de code émettent des
+                                avertissements <em>faux positifs</em>, à savoir des avertissements qui n’en sont pas
+                                vraiment (et que le compilateur, lui, n’émettra pas). Par exemple, vous pourrez
+                                probablement observer que les symbols tels que <code
+                                    class="language-plaintext highlighter-rouge">S_IFMT</code> sont soulignés en rouge
+                                dans VScode (avec un avertissement de type <em>Identifier X is undefined</em>). Ceci ne
+                                sont <strong>pas</strong> des avertissements qui vous pénaliseront (puisqu’ils sont faux
+                                et dus à des limitations dans l’outil d’analyse). Lorsque nous évaluons votre code pour
+                                savoir si le <em>compilateur</em> émet des avertissements, nous faisons toujours <code
+                                    class="language-plaintext highlighter-rouge">CMake Clean</code> puis <code
+                                    class="language-plaintext highlighter-rouge">CMake Build</code> et observons la
+                                sortie dans la terminal. Si aucun avertissement (ou erreur!) ne s’affiche, le code est
+                                considéré comme conforme sur ce point.</p>
+                        </blockquote>
+
+                        <h2 id="8-modalités-dévaluation">8. Modalités d’évaluation<a class="header-link"
+                                href="https://setr-ulaval.github.io/labo2-h26/#8-modalit%C3%A9s-d%C3%A9valuation"
+                                title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a>
+                        </h2>
+
+                        <p>Ce travail doit être réalisé <strong>en équipe de deux</strong>, la charge de travail étant à
+                            répartir équitablement entre les deux membres de l’équipe. Aucun rapport n’est à remettre,
+                            mais vous devez soumettre votre code source dans monPortail avant le <strong>11 février
+                                2026, 23h59</strong>. Ensuite, lors de la séance de laboratoire du <strong>13 février
+                                2026</strong>, les <strong>deux</strong> équipiers doivent être présent pour
+                            l’évaluation individuelle de 30 minutes. Si vous ne pouvez pas vous y présenter, contactez
+                            l’équipe pédagogique du cours dans les plus brefs délais afin de convenir d’une date
+                            d’évaluation alternative. Ce travail compte pour <strong>12%</strong> de la note totale du
+                            cours.</p>
+
+                        <p>L’évaluation en personne se fait sur le matériel (Raspberry Pi Zero W) de l’équipe
+                            pédagogique (enseignant ou assistant de cours), configuré avec l’image du laboratoire 1.
+                            Cette évaluation comprendra les éléments suivants :</p>
+
+                        <ol>
+                            <li>
+                                <p>Compilation de votre code sous l’environnement de développement standard.
+                                    Vérification de l’absence de messages d’avertissement du compilateur et de la
+                                    réussite de la compilation.</p>
+                            </li>
+                            <li>
+                                <p>Transfert des binaires serveur et client sur notre Raspberry Pi. Nous y ouvrirons
+                                    plusieurs termineux afin d’effectuer des commandes similaires à celles suivantes :
+                                </p>
+                            </li>
+                        </ol>
+
+                        <ul>
+                            <li><strong>Terminal 1</strong>: c’est celui qui exécutera le serveur, soit la commande
+                                <code
+                                    class="language-plaintext highlighter-rouge">/home/pi/projects/laboratoire2/setr_tp2_serveurcurl</code>;
+                            </li>
+                            <li><strong>Terminal 2</strong>: il exécute et affiche la sortie du daemon, donc <code
+                                    class="language-plaintext highlighter-rouge">/home/pi/projects/laboratoire2/setr_tp2_daemonfuse -f /home/pi/projects/laboratoire2/pointdemontage</code>.
+                                Avant de lancer le daemon, nous noterons le PID du serveur à l’aide de la commande <code
+                                    class="language-plaintext highlighter-rouge">ps ax | grep setr_tp2_serveurcurl</code>.
+                                Ce PID sera utilisé pour envoyer un signal <code
+                                    class="language-plaintext highlighter-rouge">SIGUSR2</code> au serveur par la suite;
+                            </li>
+                            <li><strong>Terminal 3</strong>: ce terminal et le suivant simuleront deux utilisateurs.
+                                Nous y exécuterons les commandes listées ci-après dans l’ordre.
+                                <strong>Attention</strong>, deux commandes seront lancées simultanément (ou plutôt,
+                                rapidement l’une après l’autre) dans les terminaux 3 et 4:
+                                <ul>
+                                    <li><code
+                                            class="language-plaintext highlighter-rouge">cd /home/pi/projects/laboratoire2/pointdemontage</code>;
+                                    </li>
+                                    <li><code class="language-plaintext highlighter-rouge">ls</code>;</li>
+                                    <li><code class="language-plaintext highlighter-rouge">cat fichier.cpp</code>;</li>
+                                    <li><code class="language-plaintext highlighter-rouge">md5sum file100Mo</code>.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Terminal 4</strong> (simultanément avec le terminal 3):
+                                <ul>
+                                    <li><code
+                                            class="language-plaintext highlighter-rouge">cd /home/pi/projects/laboratoire2/pointdemontage</code>;
+                                    </li>
+                                    <li><code
+                                            class="language-plaintext highlighter-rouge">md5sum logo.png &amp; kill -s SIGUSR2 PID &amp;</code>
+                                    </li>
+                                    <li><code class="language-plaintext highlighter-rouge">cat existepas.txt</code>;
+                                    </li>
+                                    <li><code class="language-plaintext highlighter-rouge">md5sum file1Mo</code>.</li>
+                                </ul>
+                            </li>
+                            <li>Il est possible que nous exécutions d’autres commandes lors de l’évaluation.</li>
+                        </ul>
+
+                        <h3 id="81-barème-dévaluation">8.1. Barème d’évaluation<a class="header-link"
+                                href="https://setr-ulaval.github.io/labo2-h26/#81-bar%C3%A8me-d%C3%A9valuation"
+                                title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a>
+                        </h3>
+
+                        <p>La note individuelle est composée de la note d’équipe, ajustée d’un facteur individuel. Pour
+                            l’obtention de la note d’équipe, le barême d’évaluation détaillé sera le suivant
+                            (laboratoire noté sur 20 points) :</p>
+
+                        <h4 id="811-qualité-du-code-remis-7-points">8.1.1. Qualité du code remis (7 points)<a
+                                class="header-link"
+                                href="https://setr-ulaval.github.io/labo2-h26/#811-qualit%C3%A9-du-code-remis-7-points"
+                                title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a>
+                        </h4>
+
+                        <ul>
+                            <li>(5 pts) Le code C est valide, complet et ne contient pas d’erreurs empêchant le bon
+                                déroulement des programmes.</li>
+                            <li>(1 pts) La compilation des deux exécutables ne génère aucun avertissement
+                                (<em>warning</em>) de la part du compilateur.</li>
+                            <li>(1 pts) Les erreurs éventuelles (fichier non existant, module serveur non démarré) sont
+                                correctement signalées.</li>
+                        </ul>
+
+                        <h4 id="812-validité-de-la-solution-13-points">8.1.2. Validité de la solution (13 points)<a
+                                class="header-link"
+                                href="https://setr-ulaval.github.io/labo2-h26/#812-validit%C3%A9-de-la-solution-13-points"
+                                title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a>
+                        </h4>
+
+                        <blockquote>
+                            <p><strong>Attention</strong> : un programme ne compilant pas obtient automatiquement une
+                                note de <strong>zéro</strong> pour cette section.</p>
+                        </blockquote>
+
+                        <ul>
+                            <li>(2 pts) Le programme est en mesure de télécharger un fichier sur un serveur distant via
+                                la librairie cURL.</li>
+                            <li>(3 pts) La communication entre le module serveur (le programme téléchargeant les
+                                fichiers) et client (le système de fichiers FUSE) via un socket Unix est fonctionnelle
+                                dans les deux sens.</li>
+                            <li>(2 pts) Le système de fichiers setrFS est fonctionnel pour lister les fichiers du
+                                répertoires.</li>
+                            <li>(3 pts) Le système de fichiers setrFS est fonctionnel en lecture (il est possible
+                                d’ouvrir tous les fichiers présents dans le répertoire de test).</li>
+                            <li>(2 pts) Le système complet est en mesure de gérer plusieurs fichiers en même temps, tant
+                                du côté du module serveur (téléchargement parallèle de plusieurs fichiers) que du côté
+                                du module client (plusieurs appels au système de fichiers simultanés).</li>
+                            <li>(1 pts) L’envoi d’un signal SIGUSR2 au module serveur écrit correctement les
+                                statistiques courantes sur la console.</li>
+                        </ul>
+
+                        <h4 id="813-évaluation-individuelle">8.1.3. Évaluation individuelle<a class="header-link"
+                                href="https://setr-ulaval.github.io/labo2-h26/#813-%C3%A9valuation-individuelle"
+                                title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a>
+                        </h4>
+
+                        <p>Une évaluation individuelle écrite portant sur le laboratoire sera tenue, <em>en
+                                personne</em>, à la séance d’atelier du 13 février 2026. La note obtenue à cette
+                            évaluation deviendra un facteur multiplicatif appliqué individuellement sur la note
+                            d’équipe. Par exemple, une note de 75% à l’évaluation individuelle combinée à une note de
+                            90% pour le code remis résultera en une note de 0.75*0.90 = 67.5%. Une absence non-motivée à
+                            cette évaluation entraîne une note (et donc un facteur multiplicatif) de 0.</p>
+
+                        <h4 id="814-questionnaire-sur-lutilisation-de-lia">8.1.4. Questionnaire sur l’utilisation de
+                            l’IA<a class="header-link"
+                                href="https://setr-ulaval.github.io/labo2-h26/#814-questionnaire-sur-lutilisation-de-lia"
+                                title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a>
+                        </h4>
+
+                        <p>Votre remise <em>doit</em> inclure le fichier <code
+                                class="language-plaintext highlighter-rouge">UTILISATION_IA.txt</code> dûment complété.
+                            Les réponses ne sont pas évaluées en tant que telles, mais ne pas remettre ce fichier (ou le
+                            remettre dans son état initial, sans modifications et réponses aux questions) entraîne une
+                            pénalité automatique de 10% sur la note d’équipe.</p>
+
+                        <h2 id="9-ressources-et-lectures-connexes">9. Ressources et lectures connexes<a
+                                class="header-link"
+                                href="https://setr-ulaval.github.io/labo2-h26/#9-ressources-et-lectures-connexes"
+                                title="Permalink"><span class="sr-only">Permalink</span><i class="fas fa-link"></i></a>
+                        </h2>
+
+                        <ul>
+                            <li>Les <a href="http://man7.org/linux/man-pages/index.html">pages de manuel (man) de
+                                    Linux</a>. Ces pages sont également disponibles sur la plupart des ordinateurs
+                                utilisant Linux, en tapant la commande <code
+                                    class="language-plaintext highlighter-rouge">man nom_de_la_commande</code>.</li>
+                            <li>Un <a href="https://computing.llnl.gov/tutorials/pthreads/">tutoriel détaillé</a> sur
+                                les threads POSIX (<em>pthreads</em>).</li>
+                            <li>Une <a
+                                    href="https://www.cs.hmc.edu/~geoff/classes/hmc.cs135.201109/homework/fuse/fuse_doc.html">page
+                                    d’explication des principales fonctions de FUSE</a> dans le cadre de
+                                l’implémentation d’un système de fichiers simple.</li>
+                            <li>Une <a href="http://www.cplusplus.com/reference/clibrary/">référence en ligne</a> de la
+                                librairie standard du langage C.</li>
+                            <li>Un <a href="https://jorge.fbarr.net/2014/01/19/introduction-to-strace/">tutoriel
+                                    d’introduction sur strace</a>.</li>
+                        </ul>
+
+
+                    </section>
+
+                    <footer class="page__meta">
+
+
+
+
+
+
+                    </footer>
+
+
+
+
+
+                </div>
+
+
+            </article>
+
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <div id="footer" class="page__footer">
+        <footer>
+            <!-- start custom footer snippets -->
+
+            <!-- end custom footer snippets -->
+
+
+            <div class="page__footer-follow">
+                <ul class="social-icons">
+
+
+
+
+
+                    <li><a href="https://setr-ulaval.github.io/labo2-h26/feed.xml"><i class="fas fa-fw fa-rss-square"
+                                aria-hidden="true"></i> Feed</a></li>
+
+                </ul>
+            </div>
+
+
+            <div class="page__footer-copyright">© 2026 <a href="https://setr-ulaval.github.io/">Laboratoire 2 | Systèmes
+                    embarqués temps réel - GIF-3004</a>. Powered by <a href="https://jekyllrb.com/"
+                    rel="nofollow">Jekyll</a> &amp; <a
+                    href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal
+                    Mistakes</a>.</div>
+
+        </footer>
+    </div>
+
+
+    <script
+        src="./Laboratoire 2 _ Programmation système et réseau avec POSIX - Laboratoire 2 _ Systèmes embarqués temps réel - GIF-3004_files/main.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
