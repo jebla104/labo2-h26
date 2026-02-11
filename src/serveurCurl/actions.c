@@ -22,6 +22,24 @@ int verifierNouvelleConnexion(struct requete reqList[], int maxlen, int socket){
     // Cette fonction doit retourner 0 si elle n'a pas acceptée de nouvelle connexion, ou 1 dans le cas contraire.
 
     // TODO
+
+    int newConnect = nouvelleRequete(reqList, maxlen);
+    if (newConnect < 0) {
+        return 0;
+    }
+
+    int clientSocket = accept(socket, NULL, NULL);
+    if (clientSocket < 0) {
+        if (errno == EAGAIN) {
+            return 0;
+        }
+        perror("accept() failed\n");
+        exit(1);
+    }
+
+    reqList[newConnect].fdSocket = clientSocket;
+    reqList[newConnect].status = REQ_STATUS_LISTEN;
+    return 1;
 }
 
 int traiterConnexions(struct requete reqList[], int maxlen){
@@ -69,7 +87,7 @@ int traiterConnexions(struct requete reqList[], int maxlen){
                         printf("Lecture de la requete sur le socket %i\n", reqList[i].fdSocket);
                     octetsTraites = read(reqList[i].fdSocket, buffer, sizeof(req));
                     if(octetsTraites == -1){
-                        perror("Erreur en effectuant un read() sur un socket pret");
+                        perror("Erreur en effectuant un read() sur un socket pret\n");
                         exit(1);
                     }
 
@@ -85,6 +103,12 @@ int traiterConnexions(struct requete reqList[], int maxlen){
                     // Voyez man pipe pour plus d'informations sur son fonctionnement
                     // TODO
 
+                    int pipefd[2];
+                    if (pipe(pipefd) < 0) {
+                        perror("pipe() failed\n");
+                        exit(1);
+                    }
+
                     // Une fois le pipe initialisé, vous devez effectuer un fork, à l'aide de la fonction du même nom
                     // Cela divisera votre processus en deux nouveaux processus, un parent et un enfant.
                     // - Dans le processus enfant, vous devez appeler la fonction executerRequete() en lui donnant
@@ -98,6 +122,25 @@ int traiterConnexions(struct requete reqList[], int maxlen){
                     // le parent ou dans l'enfant, voyez man fork(2).
                     // TODO
 
+                    pid_t pid = fork();
+                    if (pid < 0) {
+                        perror("fork() failed\n");
+                        exit(1);
+                    }
+
+                    if (pid == 0) {
+                        // enfant
+                        close(pipefd[0]);
+                        executerRequete(pipefd[1], buffer);
+                        close(pipefd[1]);
+                        exit(0);
+                    } else {
+                        // parent
+                        close(pipefd[1]);
+                        reqList[i].pid = pid;
+                        reqList[i].fdPipe = pipefd[0];
+                        reqList[i].status = REQ_STATUS_INPROGRESS;
+                    }
                 }
             }
         }
@@ -131,4 +174,59 @@ int traiterTelechargements(struct requete reqList[], int maxlen){
     // Cette fonction doit retourner 0 si elle n'a lu aucune donnée supplémentaire, ou un nombre > 0 si c'est le cas.
 
     // TODO
+
+    fd_set setPipes;
+    struct timeval tInfo;
+    tInfo.tv_sec = 0;
+    tInfo.tv_usec = SLEEP_TIME;
+    int maxFileDescriptorPlusOne = 0;
+    FD_ZERO(&setPipes);
+
+    for (int i = 0; i < maxlen; ++i) {
+        if (reqList[i].status == REQ_STATUS_INPROGRESS) {
+            FD_SET(reqList[i].fdPipe, &setPipes);
+            maxFileDescriptorPlusOne = (maxFileDescriptorPlusOne < reqList[i].fdPipe+1) ? reqList[i].fdPipe+1 : maxFileDescriptorPlusOne;
+        }
+    }
+
+    if (maxFileDescriptorPlusOne) {
+        int s = select(maxFileDescriptorPlusOne, &setPipes, NULL, NULL, &tInfo);
+        if (s > 0) {
+            for (int i = 0; i < maxlen; ++i) {
+                if (reqList[i].status == REQ_STATUS_INPROGRESS && FD_ISSET(reqList[i].fdPipe, &setPipes)) {
+                    size_t taille;
+                    int octetsLus = read(reqList[i].fdPipe, &taille, sizeof(size_t));
+                    if (octetsLus < 0) {
+                        perror("read() failed\n");
+                        exit(1);
+                    }
+
+                    printf("Taille du fichier : %zu\n", taille);
+
+                    char* buffer = NULL;
+                    if (taille > 0) {
+                        buffer = malloc(taille);
+                        size_t totalOctetsLus = 0;
+                        while (totalOctetsLus < taille) {
+                            octetsLus = read(reqList[i].fdPipe, buffer + totalOctetsLus, taille - totalOctetsLus);
+                            if (octetsLus < 0) {
+                                perror("second read() failed\n");
+                                exit(1);
+                            }
+                            totalOctetsLus += octetsLus;
+                        }
+                    }
+
+                    reqList[i].buf = buffer;
+                    reqList[i].len = taille;
+                    reqList[i].status = REQ_STATUS_READYTOSEND;
+
+                    waitpid(reqList[i].pid, NULL, 0);
+                    close(reqList[i].fdPipe);
+                }
+            }
+        }
+    }
+
+    return maxFileDescriptorPlusOne;
 }
