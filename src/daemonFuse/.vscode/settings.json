@@ -1,0 +1,18 @@
+{
+    // 1. Ta variable personnalisée pour l'IP (facile à changer ici !)
+    "monProjet.raspberryIP": "192.168.2.55",
+    // 2. Configuration de l'environnement pour CMake (Build)
+    // C'est ici que tu actives ou désactives le Cross-Compile pour la génération du build
+    "cmake.environment": {
+        // Change à "0" ou supprime la ligne pour compiler en local (VM)
+        // Mets à "1" pour activer ton toolchain Raspberry Pi
+        "CROSS_COMPILE": "1"
+    },
+    "terminal.integrated.env.windows": {
+        "CROSS_COMPILE": "1"
+    },
+    "terminal.integrated.inheritEnv": true,
+    // Optionnel : Pour être sûr que CMake utilise bien tes modifs
+    "cmake.configureOnOpen": true,
+    "C_Cpp.loggingLevel": "Error"
+}

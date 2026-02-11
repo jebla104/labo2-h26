@@ -4,12 +4,75 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "cmake_configure_cross",
+            "type": "shell",
+            "command": "cmake -B build -DCMAKE_BUILD_TYPE=Debug",
+            "dependsOn": [
+                "prepare_mount_dir"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "revealProblems": "onProblem",
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "options": {
+                "env": {
+                    "CROSS_COMPILE": "1"
+                }
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "build_local",
+            "type": "shell",
+            "command": "cmake --build build",
+            "dependsOn": [
+                "cmake_configure_cross"
+            ],
+            "presentation": {
+                "reveal": "silent",
+                "revealProblems": "onProblem",
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "options": {
+                "env": {
+                    "CROSS_COMPILE": "1"
+                }
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
             "label": "syncAndStartGDB",
             "type": "shell",
-            "command": "./syncAndStartGDB.sh ${workspaceRoot} adresse_de_votre_raspberry_pi",
+            "command": "./syncAndStartGDB.sh ${workspaceRoot} ${config:monProjet.raspberryIP}",
             "presentation": {
                 "reveal": "always",
                 "panel": "new"
+            },
+            "options": {
+                "env": {
+                    "REMOTE_IP": "${config:monProjet.raspberryIP}"
+                }
+            }
+        },
+        {
+            "label": "prepare_mount_dir",
+            "type": "shell",
+            "command": "fusermount -u -z tmp/fuse_mnt || true; rm -rf tmp/fuse_mnt; mkdir -p tmp/fuse_mnt",
+            "presentation": {
+                "reveal": "silent"
             }
         }
     ]
