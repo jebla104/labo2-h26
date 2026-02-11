@@ -455,13 +455,13 @@ static int setrfs_read(const char *path, char *buf, size_t size, off_t offset,
 {
 	LOG("Reading file: %s, size %zu, offset %lld\n", path, size, (long long)offset);
 
-	if ((void *)fi->fh == NULL)
+	struct cacheFichier *fichier = (struct cacheFichier *)(uintptr_t)fi->fh;
+
+	if (fichier == NULL)
 	{
 		LOG("Invalid file handle for %s\n", path);
 		return -EBADF;
 	}
-
-	struct cacheFichier *fichier = (struct cacheFichier *)fi->fh;
 
 	if (offset >= (off_t)fichier->len)
 	{
@@ -487,7 +487,7 @@ static int setrfs_release(const char *path, struct fuse_file_info *fi)
 {
 	LOG("Releasing file: %s\n", path);
 
-	struct cacheFichier *fichier = (struct cacheFichier *)fi->fh;
+	struct cacheFichier *fichier = (struct cacheFichier *)(uintptr_t)fi->fh;
 	struct cacheData *cache = (struct cacheData *)fuse_get_context()->private_data;
 
 	pthread_mutex_lock(&(cache->mutex));
