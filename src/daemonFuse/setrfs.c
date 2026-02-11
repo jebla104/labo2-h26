@@ -5,7 +5,7 @@
  * Distribué sous licence GPL
  *
  *
-*/
+ */
 
 #define FUSE_USE_VERSION 26
 
@@ -42,25 +42,37 @@
 #include "communications.h"
 
 #include "fstools.h"
-
+#include "debug.h"
 
 const char unixSockPath[] = "/tmp/setrunixsocket";
 
-
+int fileExists(const char **files, const char *fileName)
+{
+	for (int i = 0; files[i] != NULL; i++)
+	{
+		if (strcmp(files[i], fileName) == 0)
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
 
 // Cette fonction initialise le cache et l'insère dans le contexte de FUSE, qui sera
 // accessible à toutes les autres fonctions.
 // Elle est déjà implémentée pour vous, mais vous pouvez la modifier au besoin.
-void* setrfs_init(struct fuse_conn_info *conn){
+void *setrfs_init(struct fuse_conn_info *conn)
+{
+	(void)conn;
+
 	struct cacheData cache;
-	cache.rootDirIndex = NULL;
+	cache.files = NULL;
 	cache.firstFile = NULL;
 	pthread_mutex_init(&(cache.mutex), NULL);
 	char *cachePtr = malloc(sizeof(cache));
 	memcpy(cachePtr, &cache, sizeof(cache));
-	return (void*)cachePtr;
+	return (void *)cachePtr;
 }
-
 
 // Cette fonction est appelée pour obtenir les attributs d'un fichier
 // Voyez la page man stat(2) pour des détails sur la structure 'stat' que vous devez remplir
@@ -72,123 +84,196 @@ void* setrfs_init(struct fuse_conn_info *conn){
 //				est un dossier ou un fichier.
 // - st_size : si le fichier est ouvert et en cours de lecture, vous _devez_ renvoyer la vraie taille du fichier, car
 //				FUSE utilise cette information pour déterminer si la lecture est terminée, _peu importe_ ce que renvoie
-//				votre fonction read() implémentée plus bas... Utilisez le fichier mis en cache pour obtenir sa taille 
+//				votre fonction read() implémentée plus bas... Utilisez le fichier mis en cache pour obtenir sa taille
 //				en octets dans ce dernier cas.
 //				Si le fichier n'est _pas_ ouvert, alors vous devez renvoyer une _borne supérieure_ sur sa taille.
 //				Étant donné que le plus gros fichier fait 104857600 octets, vous pouvez renvoyer cette valeur plus un.
 //				Encore une fois, si vous ne le faites pas, FUSE considérera que vous n'avez pas besoin de lire plus
 //				d'octets que la valeur que vous renvoyez...
-//				
+//
 //
 // Cette fonction montre également comment récupérer le _contexte_ du système de fichiers. Vous pouvez utiliser ces
 // lignes dans d'autres fonctions.
 static int setrfs_getattr(const char *path, struct stat *stbuf)
 {
-	// On récupère le contexte
+	LOG("path: %s\n", path);
+
 	struct fuse_context *context = fuse_get_context();
+	struct cacheData *cache = (struct cacheData *)context->private_data;
 
-	// Si vous avez enregistré dans données dans setrfs_init, alors elles sont disponibles dans context->private_data
-	// Ici, voici un exemple où nous les utilisons pour donner le bon propriétaire au fichier (l'utilisateur courant)
-	stbuf->st_uid = context->uid;		// On indique l'utilisateur actuel comme proprietaire
-	stbuf->st_gid = context->gid;		// Idem pour le groupe
+	pthread_mutex_lock(&(cache->mutex));
 
-	// TODO
+	const struct cacheFichier *fichier = trouverFichier(cache, path);
+
+	if (strcmp(path, "/") == 0)
+	{
+		LOG("Root directory requested\n");
+		stbuf->st_mode = S_IFDIR | 0655; // Dossier avec permissions 655;
+		stbuf->st_nlink = 2;			 // suivant cette information, un dossier dans un environnement unix a 2 liens (https://unix.stackexchange.com/questions/101515/why-does-a-new-directory-have-a-hard-link-count-of-2-before-anything-is-added-to/101536#101536)
+	}
+	else if (fichier != NULL)
+	{
+		LOG("File %s found in cache\n", path);
+		stbuf->st_mode = S_IFREG | 0777; // Fichier régulier avec permissions 777;
+		stbuf->st_nlink = 1;			 // Un fichier à au moins 1 lien
+		stbuf->st_size = fichier->len;
+	}
+	else
+	{
+		LOG("File %s not found in cache\n", path);
+
+		int found = 0;
+		if (cache->files != NULL)
+		{
+			found = fileExists((const char **)cache->files, path[0] == '/' ? path + 1 : path);
+		}
+
+		if (!found)
+		{
+			pthread_mutex_unlock(&(cache->mutex));
+			return -ENOENT;
+		}
+
+		stbuf->st_mode = S_IFREG | 0777;
+		stbuf->st_nlink = 1;
+		stbuf->st_size = 104857600 + 1;
+	}
+
+	stbuf->st_uid = context->uid; // On indique l'utilisateur actuel comme proprietaire
+	stbuf->st_gid = context->gid; // Idem pour le groupe
+	stbuf->st_atime = time(NULL);
+	stbuf->st_mtime = time(NULL);
+	stbuf->st_ctime = time(NULL);
+	stbuf->st_blksize = 0;
+	stbuf->st_blocks = 0;
+	stbuf->st_dev = 0;
+	stbuf->st_ino = 0;
+	stbuf->st_rdev = 0;
+
+	pthread_mutex_unlock(&(cache->mutex));
+
+	return 0;
 }
-
 
 // Cette fonction est utilisée pour lister un dossier. Elle est déjà implémentée pour vous
 static int setrfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
-		       off_t offset, struct fuse_file_info *fi)
+						  off_t offset, struct fuse_file_info *fi)
 {
-	DIR *dp;
-	struct dirent *de;
+	LOG("Reading dir: %s\n", path);
+	// DIR *dp;
+	// struct dirent *de;
 	printf("setrfs_readdir : %s\n", path);
-	(void) offset;
-	(void) fi;
+	(void)offset;
+	(void)fi;
 
 	struct fuse_context *context = fuse_get_context();
-	struct cacheData *cache = (struct cacheData*)context->private_data;
-	if(cache->rootDirIndex == NULL){
+	struct cacheData *cache = (struct cacheData *)context->private_data;
+
+	pthread_mutex_lock(&(cache->mutex));
+
+	if (cache->files == NULL) // lock pour verifier si le cache est rempli, si vide on unlock le temps des connexions/read
+	{
+		pthread_mutex_unlock(&(cache->mutex));
 		// Le listing du repertoire n'est pas en cache
 		// On doit faire une requete
 		// On ouvre un socket
 		int sock = socket(AF_UNIX, SOCK_STREAM, 0);
-	    if(sock == -1){
-	        perror("Impossible d'initialiser le socket UNIX");
-	        return -1;
-	    }
+		if (sock == -1)
+		{
+			perror("Impossible d'initialiser le socket UNIX");
+			return -1;
+		}
 
-	    // Ecriture des parametres du socket
-	    struct sockaddr_un sockInfo;
-	    memset(&sockInfo, 0, sizeof(sockInfo));
-	    sockInfo.sun_family = AF_UNIX;
-	    strncpy(sockInfo.sun_path, unixSockPath, sizeof(sockInfo.sun_path) - 1);
+		// Ecriture des parametres du socket
+		struct sockaddr_un sockInfo;
+		memset(&sockInfo, 0, sizeof(sockInfo));
+		sockInfo.sun_family = AF_UNIX;
+		strncpy(sockInfo.sun_path, unixSockPath, sizeof(sockInfo.sun_path) - 1);
 
 		// Connexion
-	    if(connect(sock, (const struct sockaddr *) &sockInfo, sizeof(sockInfo)) < 0){
-	        perror("Erreur connect");
-	        exit(1);
-	    }
+		if (connect(sock, (const struct sockaddr *)&sockInfo, sizeof(sockInfo)) < 0)
+		{
+			perror("Erreur connect");
+			exit(1);
+		}
 
 		// Formatage et envoi de la requete
-		//size_t len = strlen() + 1;		// +1 pour le caractere NULL de fin de chaine
-	    struct msgReq req;
-	    req.type = REQ_LIST;
-	    req.sizePayload = 0;
+		// size_t len = strlen() + 1;		// +1 pour le caractere NULL de fin de chaine
+		struct msgReq req;
+		req.type = REQ_LIST;
+		req.sizePayload = 0;
 		int octetsTraites = envoyerMessage(sock, &req, NULL);
 
 		// On attend et on recoit le fichier demande
 		struct msgRep rep;
 		octetsTraites = read(sock, &rep, sizeof(rep));
-		if(octetsTraites == -1){
+		if (octetsTraites == -1)
+		{
 			perror("Erreur en effectuant un read() sur un socket pret");
 			exit(1);
 		}
-		if(VERBOSE)
+		if (VERBOSE)
 			printf("Lecture de l'en-tete de la reponse sur le socket %i\n", sock);
 
-		pthread_mutex_lock(&(cache->mutex));
-		cache->rootDirIndex = malloc(rep.sizePayload + 1);
-		cache->rootDirIndex[rep.sizePayload] = 0;		// On s'assure d'avoir le caractere nul a la fin de la chaine
+		char *indexFileContent = malloc(rep.sizePayload + 1);
+		indexFileContent[rep.sizePayload] = 0; // On s'assure d'avoir le caractere nul a la fin de la chaine
 		unsigned int totalRecu = 0;
 		// Il se peut qu'on ait a faire plusieurs lectures si le fichier est gros
-		while(totalRecu < rep.sizePayload){
-			octetsTraites = read(sock, cache->rootDirIndex + totalRecu, rep.sizePayload - totalRecu);
+		while (totalRecu < rep.sizePayload)
+		{
+			octetsTraites = read(sock, indexFileContent + totalRecu, rep.sizePayload - totalRecu);
 			totalRecu += octetsTraites;
 		}
-		pthread_mutex_unlock(&(cache->mutex));
-	}
 
-	// On va utiliser strtok, qui modifie la string
-	// On utilise donc une copie
-	//pthread_mutex_lock(&(cache->mutex));
-	char *indexStr = malloc(strlen(cache->rootDirIndex) + 1);
-	strcpy(indexStr, cache->rootDirIndex);
-	//pthread_mutex_lock(&(cache->mutex));
+		int numFiles = 0;
+		for (size_t i = 0; i < rep.sizePayload; i++)
+		{
+			if (indexFileContent[i] == '\n')
+				numFiles++;
+		}
+
+		pthread_mutex_lock(&(cache->mutex));
+
+		if (cache->files == NULL) // cache toujours incomplet, on peut le remplir
+		{
+			cache->files = malloc((numFiles + 1) * sizeof(char *));
+			const char *token = strtok(indexFileContent, "\n");
+			int i = 0;
+			while (token != NULL)
+			{
+				cache->files[i] = strdup(token);
+				token = strtok(NULL, "\n");
+				i++;
+			}
+			cache->files[i] = NULL;
+		}
+		free(indexFileContent);
+	}
 
 	// FUSE s'occupe deja des pseudo-fichiers "." et "..",
 	// donc on se contente de lister le fichier d'index qu'on vient de recevoir
 
-	char *nomFichier = strtok(indexStr, "\n");		// On assume des fins de lignes UNIX
-	int countInode = 1;
-	while(nomFichier != NULL){
+	// int countInode = 1;
+	int numFiles = 0;
+	while (cache->files[numFiles] != NULL)
+	{
 		struct stat st;
 		memset(&st, 0, sizeof(st));
-		st.st_ino = 1; 			// countInode++;
-		st.st_mode = (S_IFREG & S_IFMT) | 0777;	// Fichier regulier, permissions 777; IGNOREZ le potentiel "souligne rouge" sous les symboles S_IFREG and S_IFMT
-		//if(VERBOSE)
+		st.st_ino = 1;							// countInode++;
+		st.st_mode = (S_IFREG & S_IFMT) | 0777; // Fichier regulier, permissions 777; IGNOREZ le potentiel "souligne rouge" sous les symboles S_IFREG and S_IFMT
+		// if(VERBOSE)
 		//	printf("Insertion du fichier %s dans la liste du repertoire\n", nomFichier);
-		if (filler(buf, nomFichier, &st, 0)){
+		if (filler(buf, cache->files[numFiles], &st, 0))
+		{
 			perror("Erreur lors de l'insertion du fichier dans la liste du repertoire!");
 			break;
 		}
-		nomFichier = strtok(NULL, "\n");
+		numFiles++;
 	}
-	free(indexStr);
 
+	pthread_mutex_unlock(&(cache->mutex));
 	return 0;
 }
-
 
 // Cette fonction est appelée lorsqu'un processus ouvre un fichier. Dans ce cas-ci, vous devez :
 // 1) si le fichier est déjà dans le cache, retourner avec succès en mettant à jour le file handle (champ fh)
@@ -210,9 +295,143 @@ static int setrfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 // énoncées plus haut. Rappelez-vous en particulier qu'un pointeur est unique...
 static int setrfs_open(const char *path, struct fuse_file_info *fi)
 {
-		// TODO
-}
+	LOG("Opening file: %s\n", path);
 
+	if (strcmp(path, "/") == 0)
+	{
+		LOG("Cannot open root directory\n");
+		return -EISDIR;
+	}
+
+	struct fuse_context *context = fuse_get_context();
+	struct cacheData *cache = (struct cacheData *)context->private_data;
+
+	pthread_mutex_lock(&(cache->mutex));
+
+	const struct cacheFichier *fichier = trouverFichier(cache, path);
+
+	if (fichier != NULL)
+	{
+		LOG("File %s already in cache, opening it\n", path);
+		incrementerCompteurFichier(cache, path, 1);
+		fi->fh = (unsigned long)fichier;
+		pthread_mutex_unlock(&(cache->mutex));
+		return 0;
+	}
+
+	int exists = 0;
+	if (cache->files != NULL)
+	{
+		exists = fileExists((const char **)cache->files, path[0] == '/' ? path + 1 : path);
+	}
+
+	pthread_mutex_unlock(&(cache->mutex));
+
+	if (!exists)
+	{
+		perror("Le fichier n'existe pas sur le serveur.");
+		return -ENOENT;
+	}
+
+	int sock = socket(AF_UNIX, SOCK_STREAM, 0);
+	if (sock == -1)
+	{
+		perror("Impossible d'initialiser le socket UNIX");
+		return -EIO;
+	}
+
+	// Ecriture des parametres du socket
+	struct sockaddr_un sockInfo;
+	memset(&sockInfo, 0, sizeof(sockInfo));
+	sockInfo.sun_family = AF_UNIX;
+	strncpy(sockInfo.sun_path, unixSockPath, sizeof(sockInfo.sun_path) - 1);
+
+	// Connexion
+	if (connect(sock, (const struct sockaddr *)&sockInfo, sizeof(sockInfo)) < 0)
+	{
+		perror("Erreur connect");
+		close(sock);
+		return -EIO;
+	}
+
+	// Formatage et envoi de la requete
+	// size_t len = strlen() + 1;		// +1 pour le caractere NULL de fin de chaine
+	const char *fileName = path[0] == '/' ? path + 1 : path;
+	struct msgReq req;
+	req.type = REQ_READ;
+	req.sizePayload = strlen(fileName) + 1;
+	int octetsTraites = envoyerMessage(sock, &req, (void *)fileName);
+
+	// On attend et on recoit le fichier demande
+	struct msgRep rep;
+	octetsTraites = read(sock, &rep, sizeof(rep));
+	if (octetsTraites == -1)
+	{
+		perror("Erreur en effectuant un read() sur un socket pret");
+		close(sock);
+		return -EIO;
+	}
+
+	if (octetsTraites == 0 || rep.status != STATUS_OK)
+	{
+		LOG("Error from http server for file %s\n", path);
+		close(sock);
+		return -ENOENT;
+	}
+
+	if (VERBOSE)
+		printf("Lecture de l'en-tete de la reponse sur le socket %i\n", sock);
+
+	struct cacheFichier *fichierLu = malloc(sizeof(struct cacheFichier));
+
+	fichierLu->data = malloc(rep.sizePayload);
+	fichierLu->nom = strdup(path);
+	fichierLu->countOpen = 1;
+	fichierLu->offset = 0;
+	fichierLu->prev = NULL;
+	fichierLu->next = NULL;
+
+	fichierLu->len = rep.sizePayload;
+
+	unsigned int totalRecu = 0;
+	while (totalRecu < rep.sizePayload)
+	{
+		octetsTraites = read(sock, fichierLu->data + totalRecu, rep.sizePayload - totalRecu);
+		if (octetsTraites <= 0)
+		{
+			libererFichier(fichierLu);
+			close(sock);
+			return -EIO;
+		}
+		totalRecu += octetsTraites;
+	}
+
+	close(sock);
+
+	if (totalRecu != rep.sizePayload)
+	{
+		libererFichier(fichierLu);
+		return -EIO;
+	}
+
+	pthread_mutex_lock(&(cache->mutex));
+
+	const struct cacheFichier *alreadyInCache = incrementerCompteurFichier(cache, path, 1);
+	if (alreadyInCache != NULL)
+	{
+		libererFichier(fichierLu);
+		fi->fh = (unsigned long)alreadyInCache;
+	}
+	else
+	{
+		insererFichier(cache, fichierLu);
+		fi->fh = (unsigned long)fichierLu;
+	}
+
+	pthread_mutex_unlock(&(cache->mutex));
+
+	return 0;
+}
 
 // Cette fonction est appelée lorsqu'un processus lit un fichier après l'avoir ouvert.
 // FUSE s'occupe déjà de vous redonner la structure fuse_file_info que vous devez avoir remplie dans setrfs_open()
@@ -230,22 +449,66 @@ static int setrfs_open(const char *path, struct fuse_file_info *fi)
 // le champ offset de la structure cacheFichier pour retenir cette position entre les différents appels à read().
 //
 // N'oubliez pas que vous recevez le file handle dans la structure fuse_file_info. Vous n'êtes pas forcés de l'utiliser,
-// mais si vous y avez mis quelque chose d'utile, il est facile de le récupérer!
+// lebut si vous y avez mis quelque chose d'utile, il est facile de le récupérer!
 static int setrfs_read(const char *path, char *buf, size_t size, off_t offset,
-		    struct fuse_file_info *fi)
+					   struct fuse_file_info *fi)
 {
-		// TODO
-}
+	LOG("Reading file: %s, size %zu, offset %lld\n", path, size, (long long)offset);
 
+	if ((void *)fi->fh == NULL)
+	{
+		LOG("Invalid file handle for %s\n", path);
+		return -EBADF;
+	}
+
+	struct cacheFichier *fichier = (struct cacheFichier *)fi->fh;
+
+	if (offset >= (off_t)fichier->len)
+	{
+		return 0;
+	}
+
+	size_t available = fichier->len - offset;
+
+	if (size > available)
+		size = available;
+
+	memcpy(buf, fichier->data + offset, size);
+	// l'offset en parametre devrait etre correct, modifier cet offset necessiterai de lock le mutex -> impossible que deux fichiers read en meme temps.
+	// fichier->offset = offset + size;
+
+	return size;
+}
 
 // Cette fonction est appelée lorsqu'un processus ferme un fichier (close).
 // Vous n'avez rien de particulier à produire comme résultat, mais vous devez vous assurer de libérer toute la mémoire
 // utilisée pour stocker ce fichier (pensez au buffer contenant son cache, son nom, etc.)
 static int setrfs_release(const char *path, struct fuse_file_info *fi)
 {
-		// TODO
-}
+	LOG("Releasing file: %s\n", path);
 
+	struct cacheFichier *fichier = (struct cacheFichier *)fi->fh;
+	struct cacheData *cache = (struct cacheData *)fuse_get_context()->private_data;
+
+	pthread_mutex_lock(&(cache->mutex));
+
+	struct cacheFichier *found = incrementerCompteurFichier(cache, path, -1);
+
+	if (found == NULL || found != fichier)
+	{
+		pthread_mutex_unlock(&(cache->mutex));
+		return -ENOENT;
+	}
+
+	if (found != NULL && found->countOpen <= 0)
+	{
+		retirerFichier(cache, found);
+	}
+
+	pthread_mutex_unlock(&(cache->mutex));
+
+	return 0;
+}
 
 ///////////////////////////////////////
 // Plus rien à faire à partir d'ici! //
@@ -255,7 +518,7 @@ static int setrfs_release(const char *path, struct fuse_file_info *fi)
 ///////////////////////////////////////
 
 static int setrfs_write(const char *path, const char *buf, size_t size,
-		     off_t offset, struct fuse_file_info *fi)
+						off_t offset, struct fuse_file_info *fi)
 {
 	int fd;
 	int res;
@@ -264,7 +527,6 @@ static int setrfs_write(const char *path, const char *buf, size_t size,
 
 	return 0;
 }
-
 
 static int setrfs_access(const char *path, int mask)
 {
@@ -291,7 +553,6 @@ static int setrfs_statfs(const char *path, struct statvfs *stbuf)
 	return 0;
 }
 
-
 static int setrfs_mknod(const char *path, mode_t mode, dev_t rdev)
 {
 	int res;
@@ -306,7 +567,6 @@ static int setrfs_mkdir(const char *path, mode_t mode)
 	int res;
 	printf("#### NOT IMPLEMENTED! ####");
 	printf("setrfs_mkdir\n");
-
 
 	return 0;
 }
@@ -325,7 +585,6 @@ static int setrfs_rmdir(const char *path)
 	int res;
 	printf("#### NOT IMPLEMENTED! ####");
 	printf("setrfs_rmdir\n");
-
 
 	return 0;
 }
@@ -396,14 +655,14 @@ static int setrfs_utimens(const char *path, const struct timespec ts[2])
 #endif
 
 static int setrfs_fsync(const char *path, int isdatasync,
-		     struct fuse_file_info *fi)
+						struct fuse_file_info *fi)
 {
 	/* Just a stub.	 This method is optional and can safely be left
 	   unimplemented */
 
-	(void) path;
-	(void) isdatasync;
-	(void) fi;
+	(void)path;
+	(void)isdatasync;
+	(void)fi;
 	printf("setrfs_fsync\n");
 	printf("#### NOT IMPLEMENTED! ####");
 	return 0;
@@ -411,107 +670,108 @@ static int setrfs_fsync(const char *path, int isdatasync,
 
 #ifdef HAVE_POSIX_FALLOCATE
 static int setrfs_fallocate(const char *path, int mode,
-			off_t offset, off_t length, struct fuse_file_info *fi)
+							off_t offset, off_t length, struct fuse_file_info *fi)
 {
 	int fd;
 	int res;
 	printf("#### NOT IMPLEMENTED! ####");
 	printf("setrfs_fallocate\n");
-	return 0
+	return 0;
 }
 #endif
 
 #ifdef HAVE_SETXATTR
 /* xattr operations are optional and can safely be left unimplemented */
 static int setrfs_setxattr(const char *path, const char *name, const char *value,
-			size_t size, int flags)
+						   size_t size, int flags)
 {
-printf("#### NOT IMPLEMENTED! ####");
-printf("setrfs_setxattr\n");
+	printf("#### NOT IMPLEMENTED! ####");
+	printf("setrfs_setxattr\n");
 
 	return 0;
 }
 
 static int setrfs_getxattr(const char *path, const char *name, char *value,
-			size_t size)
+						   size_t size)
 {
-printf("#### NOT IMPLEMENTED! ####");
-printf("setrfs_getxattr\n");
+	printf("#### NOT IMPLEMENTED! ####");
+	printf("setrfs_getxattr\n");
 
 	return res;
 }
 
 static int setrfs_listxattr(const char *path, char *list, size_t size)
 {
-printf("#### NOT IMPLEMENTED! ####");
-printf("setrfs_listxattr\n");
+	printf("#### NOT IMPLEMENTED! ####");
+	printf("setrfs_listxattr\n");
 
 	return res;
 }
 
 static int setrfs_removexattr(const char *path, const char *name)
 {
-printf("#### NOT IMPLEMENTED! ####");
-printf("setrfs_removexattr\n");
+	printf("#### NOT IMPLEMENTED! ####");
+	printf("setrfs_removexattr\n");
 
 	return 0;
 }
 #endif /* HAVE_SETXATTR */
 
 static struct fuse_operations setrfs_oper = {
-	.init 		= setrfs_init,
-	.getattr	= setrfs_getattr,
-	.access		= setrfs_access,
-	.readlink	= setrfs_readlink,
-	.readdir	= setrfs_readdir,
-	.mknod		= setrfs_mknod,
-	.mkdir		= setrfs_mkdir,
-	.symlink	= setrfs_symlink,
-	.unlink		= setrfs_unlink,
-	.rmdir		= setrfs_rmdir,
-	.rename		= setrfs_rename,
-	.link		= setrfs_link,
-	.chmod		= setrfs_chmod,
-	.chown		= setrfs_chown,
-	.truncate	= setrfs_truncate,
+	.init = setrfs_init,
+	.getattr = setrfs_getattr,
+	.access = setrfs_access,
+	.readlink = setrfs_readlink,
+	.readdir = setrfs_readdir,
+	.mknod = setrfs_mknod,
+	.mkdir = setrfs_mkdir,
+	.symlink = setrfs_symlink,
+	.unlink = setrfs_unlink,
+	.rmdir = setrfs_rmdir,
+	.rename = setrfs_rename,
+	.link = setrfs_link,
+	.chmod = setrfs_chmod,
+	.chown = setrfs_chown,
+	.truncate = setrfs_truncate,
 #ifdef HAVE_UTIMENSAT
-	.utimens	= setrfs_utimens,
+	.utimens = setrfs_utimens,
 #endif
-	.open		= setrfs_open,
-	.read		= setrfs_read,
-	.write		= setrfs_write,
-	.statfs		= setrfs_statfs,
-	.release	= setrfs_release,
-	.fsync		= setrfs_fsync,
+	.open = setrfs_open,
+	.read = setrfs_read,
+	.write = setrfs_write,
+	.statfs = setrfs_statfs,
+	.release = setrfs_release,
+	.fsync = setrfs_fsync,
 #ifdef HAVE_POSIX_FALLOCATE
-	.fallocate	= setrfs_fallocate,
+	.fallocate = setrfs_fallocate,
 #endif
 #ifdef HAVE_SETXATTR
-	.setxattr	= setrfs_setxattr,
-	.getxattr	= setrfs_getxattr,
-	.listxattr	= setrfs_listxattr,
-	.removexattr	= setrfs_removexattr,
+	.setxattr = setrfs_setxattr,
+	.getxattr = setrfs_getxattr,
+	.listxattr = setrfs_listxattr,
+	.removexattr = setrfs_removexattr,
 #endif
 };
 
 int main(int argc, char *argv[])
 {
 	umask(0);
-	
+
 	// Ajoute systematiquement l'option direct_io pour assurer qu'aucun cache
 	// ne soit utilise par FUSE (fait en sorte que read() est toujours appele)
 	int new_argc = argc + 2;
-	char **new_argv = malloc(sizeof(char*) * (new_argc + 1));
-	
+	char **new_argv = malloc(sizeof(char *) * (new_argc + 1));
+
 	// Copy original arguments
-	for (int i = 0; i < argc; i++) {
+	for (int i = 0; i < argc; i++)
+	{
 		new_argv[i] = argv[i];
 	}
 	// Add our options
 	new_argv[argc] = "-o";
 	new_argv[argc + 1] = "direct_io,attr_timeout=0,entry_timeout=0";
 	new_argv[argc + 2] = NULL;
-	
+
 	int ret = fuse_main(new_argc, new_argv, &setrfs_oper, NULL);
 	free(new_argv);
 	return ret;

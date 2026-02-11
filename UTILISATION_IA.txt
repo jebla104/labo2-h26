@@ -1,15 +1,73 @@
 Question 1 : Avez-vous utilisé un ou des outils d'IA pour ce laboratoire, même seulement en partie (oui/non)?
 
-
+oui
 
 Répondez aux questions suivantes seulement si vous avez répondu "oui" à la question précédente.
 
 Question 2 : Quels modèles (ex., Claude Opus, Gemini Pro, GPT-Codex, etc.)?
 
+Leo: Utilisation principalement de Gemini Pro, Claude via Copilot pour la complétion de ligne
 
 Question 3 : Pour la réalisation de quelles tâches en particulier? Donnez un exemple de "prompt" utilisé et de résultat.
 
+Leo: Compréhension du sujet et configuration de milieu de développement
+
+Prompt inital configuration:
+
+im at uni working a an real time embedded system course right now, which wants me to make a daemon for fuse. I have some questions:
+er are working with a raspberry pi, but isnt it possible to make everything on my local machine including testing and stuff, then when im finished developing the executable, try it on the raspberry pi? it would make the workflow way faster!
+also, we use a VM, i installed it on UTM and stuff because im on mac, some keybinds were really horrible so ive made an ssh onto the virtual machine so i can code on my local vscode. Is is possible to set environnement variables in vscode directly and easily ? so my task/launch.json can use environnement variable for the ip of my raspberry pi
+
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "gdb",
+            "request": "attach",
+            "gdbpath": "${env:HOME}/arm-cross-comp-env/arm-raspbian-linux-gnueabihf/bin/arm-raspbian-linux-gnueabihf-gdb",
+            "name": "Debogage distant avec gdbserver",
+            "executable": "./build/setr_tp2_daemonfuse",
+            "target": "${env:REMOTE_IP}:4567",
+            // "target": "10.242.100.158:4567",
+            "remote": true,
+            "autorun": [
+                "set sysroot ${env:HOME}/arm-cross-comp-env/arm-raspbian-linux-gnueabihf/arm-raspbian-linux-gnueabihf/sysroot/"
+            ],
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": "syncAndStartGDB"
+        }
+    ]
+}
+
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "syncAndStartGDB",
+            "type": "shell",
+            "command": "./syncAndStartGDB.sh ${workspaceRoot} adresse_de_votre_raspberry_pi",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        }
+    ]
+}
+
+if you have more things that could help me correctly work on this without any issue, tell me! any hints would be an insane help for me
+
+Conversation: https://gemini.google.com/share/4581cbfe7726 Sujets: configuration, compilation, problème de packages, configuration vscode, assertion du fonctionnement correct avec environnement personnel, recherche de source d'informations.
+
+Conversation discussion du sujet: https://gemini.google.com/share/1bade8c23159
+
 
 Question 4 : Avez-vous rencontré des problèmes lors de l'utilisation de l'IA (mauvaise compréhension des commandes fournies, résultats erronés, etc.)? Qu'avez-vous fait pour les régler?
+
+Plusieurs résultats erronés pour la configuration (sources probablement très diverses pour des soucis très spécifiques), j'ai cherché à la main auprès de sources précises et vérifiables (Github Issues, StackOverflow, Unix StackExchange) Aucune utilisation pour la génération de code cependant
 
 
